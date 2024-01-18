@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint src/ --fix",
-    "type-check": "tsc",
-    "release": "npm run build && changeset publish"
+    "type-check": "tsc"
   },
   "repository": {
     "type": "git",

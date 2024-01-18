@@ -24,11 +24,16 @@ jobs:
           cache: "npm"
 
       - run: npm install --frozen-lockfile
+      # Add a build step if needed
+      - name: Build
+        run: npm run build
+
+      # Publish the changeset  
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: npm run release
+          publish: npx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
