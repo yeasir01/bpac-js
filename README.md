@@ -68,7 +68,7 @@ Include the lib folder in your project:
 
 ```javascript
 // Example: Printing a label
-import { BrotherSdk } from "./lib/index.js";
+import BrotherSdk from "./lib/index.js";
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/first.lbx",
