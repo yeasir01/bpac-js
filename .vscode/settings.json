@@ -1,0 +1,15 @@
+{
+    "cSpell.words": [
+        "bpac",
+        "CLIPART",
+        "DATETIME",
+        "iife",
+        "tsup"
+    ],
+    "liveServer.settings": {
+        "file": "./test/browser/index.html",
+        "mount": [
+            ["/", "./test/browser"]
+        ]
+    }
+}

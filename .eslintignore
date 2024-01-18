@@ -1,0 +1,8 @@
+tsup.config.js
+node_modules/
+.changeset/
+.vscode/
+.github/
+dist/
+test/
+*.js
