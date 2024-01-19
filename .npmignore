@@ -1,8 +1,12 @@
+#directories
+src/
+test/
+examples/
 .changeset/
 .github/
 .vscode/
-src/
-test/
+
+#files
 .eslintignore
 tsup.config.js
 tsconfig.json
