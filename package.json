@@ -1,6 +1,6 @@
 {
   "name": "bpac-js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "High level API for interacting with the Brother BPAC SDK",
   "main": "dist/index.js ",
   "module": "dist/index.mjs ",
