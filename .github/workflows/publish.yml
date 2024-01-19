@@ -1,44 +1,42 @@
 name: Publish
 
 on:
-    workflow_run:
-        workflows: [CI]
-        branches: [main]
-        types: [completed]
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-    publish:
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 18.x
-                  cache: "npm"
+  publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: "npm"
+      - name: Set NODE_ENV variable
+        run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
-            #Set NODE_ENV var
-            - name: Set NODE_ENV variable
-              run: echo "NODE_ENV=production" >> $GITHUB_ENV
-              
-            - run: npm install --frozen-lockfile
+      - run: npm install --frozen-lockfile
+      
+      # Add a build step if needed
+      - name: Build
+        run: npm run build
 
-            # Add a build step if needed
-            - name: Build
-              run: npm run build
-
-            # Publish the changeset
-            - name: Create Release Pull Request or Publish
-              id: changesets
-              uses: changesets/action@v1
-              with:
-                  publish: npx changeset publish
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Publish the changeset  
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npx changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
