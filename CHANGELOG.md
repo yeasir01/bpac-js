@@ -1,5 +1,11 @@
 # bpac-js
 
+## 2.0.3
+
+### Patch Changes
+
+- aa95a74: fix import from root
+
 ## 2.0.2
 
 ### Patch Changes
