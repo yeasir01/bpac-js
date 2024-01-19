@@ -6,4 +6,5 @@ export default defineConfig({
   dts: true,
   splitting: false,
   format: ['cjs', 'esm'],
+  outDir: "lib/"
 });

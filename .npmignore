@@ -1,0 +1,8 @@
+.changeset/
+.github/
+.vscode/
+src/
+test/
+.eslintignore
+tsup.config.js
+tsconfig.json
