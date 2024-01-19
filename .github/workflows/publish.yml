@@ -25,7 +25,7 @@ jobs:
       - name: Set NODE_ENV variable
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
-      - run: npm install --frozen-lockfile
+      - run: npm install --frozen-lockfile --include=dev
       
       # Add a build step if needed
       - name: Build
