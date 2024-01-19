@@ -36,39 +36,25 @@ Before using the Brother QL Series Printer SDK for Web Browsers, ensure you have
 
 ## Getting Started
 
-### 1. Clone the Repository:
+### 1. Install the package:
 
+```bash
+$ npm i bpac-js
 ```
-git clone https://github.com/yeasir01/bpac-javascript.git
-```
 
-### 2. Include the SDK in Your Project:
-
-Include the SDK files in your web project, and reference them in your HTML file.
-
-### 3. Explore Documentation:
+### 2. Explore Documentation:
 
 Visit the examples section in the repository to explore detailed guides and examples for utilizing the SDK functionalities.
 
-### 4. Contribute:
+### 3. Contribute:
 
 If you encounter issues or have suggestions, feel free to contribute to the project. Your input is highly valued!
 
 ## Usage
 
-### Installing the SDK
-
-Include the lib folder in your project:
-
-```js
-<script src="assets/js/lib/index.js"></script>
-```
-
-## Example Usage
-
 ```javascript
 // Example: Printing a label
-import BrotherSdk from "./lib/index.js";
+import BrotherSdk from "bpac-js";
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/first.lbx",
