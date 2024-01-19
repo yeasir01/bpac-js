@@ -1,4 +1,4 @@
-import BrotherSdK from "../../lib";
+import BrotherSdK from "../../dist";
 
 const printBtn = document.getElementById("print-btn");
 const previewBtn = document.getElementById("preview-btn");

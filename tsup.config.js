@@ -1,18 +1,16 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
-const env = process.env.NODE_ENV;
+const inDev = process.env.NODE_ENV !== "production";
+const inProd = process.env.NODE_ENV === "production"
 
 export default defineConfig({
-  entry: ['src/**/*.ts'],
-  clean: true,
-  splitting: true,
-  sourcemap: true,
-  minify: env === 'production',
-  bundle: env === 'production',
-  target: 'es2022',
-  dts: true,
-  bundle: true,
-  splitting: false,
-  format: ['cjs', 'esm'],
-  outDir: env === 'production' ? 'dist' : 'lib',
+    entry: ["src/**/*.ts"],
+    clean: true,
+    splitting: false,
+    sourcemap: inDev,
+    minify: inProd,
+    bundle: inProd,
+    target: "es2022",
+    format: ["cjs", "esm"],
+    dts: true
 });
