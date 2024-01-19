@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint src/ --fix",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "version": "npx changeset"
   },
   "repository": {
     "type": "git",
