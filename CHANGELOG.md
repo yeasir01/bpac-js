@@ -1,5 +1,11 @@
 # bpac-js
 
+## 2.0.2
+
+### Patch Changes
+
+- 748101e: ignore build files for prod
+
 ## 2.0.1
 
 ### Patch Changes
