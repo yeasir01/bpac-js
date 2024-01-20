@@ -4,21 +4,16 @@
         "es2022": true,
         "node": true
     },
-    "extends": [
-        "eslint:recommended",
-        "airbnb-base"
-    ],
+    "extends": ["eslint:recommended", "airbnb-base"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "indent": ["error", 4],
-        "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+        "quotes": ["error", "double", { "allowTemplateLiterals": true }],
         "no-await-in-loop": "off"
     },
     "overrides": [

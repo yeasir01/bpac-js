@@ -2,12 +2,13 @@
   "name": "bpac-js",
   "version": "2.0.3",
   "description": "High level API for interacting with the Brother BPAC SDK",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsup",
     "lint": "eslint src/ --fix",
+    "dev": "tsup src/index.ts --watch",
     "type-check": "tsc",
     "version": "npx changeset"
   },
@@ -22,6 +23,7 @@
   "author": "Yeasir H. (https://yeasirhugais.com)",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
@@ -30,8 +32,5 @@
     "eslint-plugin-import": "^2.29.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "@changesets/cli": "^2.27.1"
   }
 }

@@ -14,6 +14,11 @@ jobs:
         with:
           node-version: 18.x
           cache: "npm"
-
-      - run: npm install --frozen-lockfile
-      - run: npm run type-check && npm run lint && npm run build
+      - name: Run NPM Install
+        run: npm install --frozen-lockfile
+      - name: Run Typecheck
+        run: npm run type-check
+      - name: Run ESLint
+        run: npm run lint
+      - name: Run Build/Bundle
+        run: npm run build

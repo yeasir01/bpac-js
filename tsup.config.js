@@ -9,8 +9,8 @@ export default defineConfig({
     splitting: false,
     sourcemap: inDev,
     minify: inProd,
-    bundle: inProd,
-    target: "es2022",
-    format: ["cjs", "esm"],
-    dts: true
+    bundle: true,
+    format: ["esm", "cjs"],
+    dts: true,
+    outDir: "lib",
 });

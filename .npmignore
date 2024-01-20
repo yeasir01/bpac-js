@@ -5,6 +5,7 @@ examples/
 .changeset/
 .github/
 .vscode/
+dist/
 
 #files
 .eslintignore

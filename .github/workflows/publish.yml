@@ -22,16 +22,12 @@ jobs:
         with:
           node-version: 18.x
           cache: "npm"
-      - name: Set NODE_ENV variable
+      - name: Set NODE_ENV variable to Production
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
-
-      - run: npm install --frozen-lockfile --include=dev
-      
-      # Add a build step if needed
-      - name: Build
+      - name: Run NPM Install
+        run: npm install --frozen-lockfile --include=dev
+      - name: Run NPM Build
         run: npm run build
-
-      # Publish the changeset  
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
