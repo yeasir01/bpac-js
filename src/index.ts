@@ -2,17 +2,17 @@
 import * as bpac from "./bpac.js";
 
 // Types & Interface
-type Data = {
+type TDate = {
     [key: string]: string | Date;
 };
 
-type PrintConfig = {
+type TConfig = {
     copies: number;
     printName: string;
     quality: string;
 };
 
-type BrotherSdkConstructor = {
+type TBrotherSdk = {
     templatePath: string;
     exportDir: string;
 };
@@ -65,18 +65,18 @@ const getAbsolutePath = (
 };
 
 const open = async (path: string): Promise<boolean> => {
-    try {
-        const isOpen = await doc.Open(path);
-        return isOpen;
-    } catch (_e) {
-        await doc.Close();
-        throw new Error(
-            "Failed to open template file, please check path and try again.",
-        );
+    const isOpen = await doc.Open(path);
+
+    if (isOpen) {
+        return true;
     }
+
+    throw new Error(
+        "Failed to open template file, please check path and try again.",
+    );
 };
 
-const populateObjects = async (data: Data): Promise<boolean> => {
+const populateObjects = async (data: TDate): Promise<boolean> => {
     const props: string[] = Object.keys(data);
 
     // eslint-disable-next-line no-restricted-syntax
@@ -87,7 +87,7 @@ const populateObjects = async (data: Data): Promise<boolean> => {
         if (!obj) {
             await doc.Close();
             throw new Error(
-                `The "${prop}" object does not exist in the template.`,
+                `There is no object in the specified template with the name of "${prop}".`,
             );
         }
 
@@ -110,7 +110,7 @@ const populateObjects = async (data: Data): Promise<boolean> => {
             await obj.SetData(0, value, 0);
             break;
         default:
-            throw new Error(`Invalid type for "${prop}" prop.`);
+            throw new Error(`Unknown type for "${prop}" prop.`);
         }
     }
 
@@ -119,7 +119,7 @@ const populateObjects = async (data: Data): Promise<boolean> => {
 // end of helpers
 
 class BrotherSdk {
-    ready: boolean;
+    #ready: boolean;
 
     templatePath: string;
 
@@ -138,37 +138,29 @@ class BrotherSdk {
      * @param {String} options.exportDir
      * The path for exporting generated templates.
      */
-    constructor({ templatePath, exportDir }: BrotherSdkConstructor) {
-        this.ready = false;
+    constructor({ templatePath, exportDir }: TBrotherSdk) {
         this.templatePath = templatePath;
         this.exportDir = exportDir;
-        this.#initialize(4000);
+        this.#ready = false;
+        this.#initialize();
     }
 
-    #initialize(timeout: number) {
+    #initialize() {
         const targetNode = document.body;
         const className = "bpac-extension-installed";
 
         if (targetNode.classList.contains(className)) {
-            this.ready = true;
+            this.#ready = true;
             return;
         }
 
         let observer: MutationObserver | undefined;
-        let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-        const cleanup = () => {
-            if (timeoutId !== undefined) {
-                clearTimeout(timeoutId);
-            }
-        };
 
         // eslint-disable-next-line prefer-const
         observer = new MutationObserver(() => {
             if (targetNode.classList.contains(className)) {
-                this.ready = true;
+                this.#ready = true;
                 observer?.disconnect();
-                cleanup();
             }
         });
 
@@ -176,14 +168,26 @@ class BrotherSdk {
             attributes: true,
             attributeFilter: ["class"],
         });
+    }
 
-        timeoutId = setTimeout(() => {
-            // eslint-disable-next-line no-console
-            console.error(
-                "The b-PAC extension may not be installed or active.",
-            );
-            cleanup();
-        }, timeout);
+    async #isPrintReady(timeout: number = 3000): Promise<boolean> {
+        if (this.#ready) {
+            return true;
+        }
+
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (this.#ready) {
+                    resolve(true);
+                } else {
+                    reject(
+                        new Error(
+                            "Cannot establish printer communication: b-PAC extension missing or inactive. Install/enable.",
+                        ),
+                    );
+                }
+            }, timeout);
+        });
     }
 
     /**
@@ -194,18 +198,19 @@ class BrotherSdk {
      * Configuration options
      * @param {number} config.copies
      * The number of copies to be printed.
-     * @param {string} config.printName
+     * @param {string} config.printNamePrintConfig
      * The name of the document to be printed.
      * @param {keyof printQuality} config.quality
      * Print quality.
      * @returns {boolean}
      * A promise that resolves with a boolean.
      */
-    async print(data: Data, config: PrintConfig): Promise<boolean> {
+    async print(data: TDate, config: TConfig): Promise<boolean> {
         const copies = config?.copies || 1;
         const printName = config?.printName || "BPAC-Document";
         const printOpt = printQuality[config?.quality || "default"];
 
+        await this.#isPrintReady();
         await open(this.templatePath);
         await populateObjects(data);
         await doc.StartPrint(printName, printOpt);
@@ -232,12 +237,13 @@ class BrotherSdk {
      * returns a base64 string.
      */
     async getImageData(
-        data: Data,
+        data: TDate,
         opts: { height: number; width: number },
     ): Promise<string> {
         const height = opts?.height || 0;
         const width = opts?.width || 0;
 
+        await this.#isPrintReady();
         await open(this.templatePath);
         await populateObjects(data);
         const base64Data = await doc.GetImageData(4, width, height);
@@ -271,6 +277,7 @@ class BrotherSdk {
      *
      */
     async getPrinterName(): Promise<string> {
+        await this.#isPrintReady();
         await open(this.templatePath);
         const printer = await doc.GetPrinterName();
         await doc.Close();
@@ -306,7 +313,7 @@ class BrotherSdk {
      * If an invalid encoding is supplied to the export method.
      */
     async export(
-        data: Data = {},
+        data: TDate = {},
         filePathOrFileName: string = "",
         encoding = "default",
         resolution = 0,
@@ -326,16 +333,17 @@ class BrotherSdk {
             filePathOrFileName,
         );
 
+        await this.#isPrintReady();
         await open(this.templatePath);
         await populateObjects(data);
-        const status = await doc.Export(
-            encodingType,
-            destinationPath,
-            resolution,
-        );
+        const status = await doc.Export(encodingType, destinationPath, resolution);
         await doc.Close();
 
-        return status;
+        if (status) {
+            return true;
+        }
+
+        throw new Error("Export failed: Please check the export directory and filename.");
     }
 }
 

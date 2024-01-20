@@ -29,7 +29,7 @@ const printTag = async () => {
 const previewTag = async () => {
     try {
         preview.src = "";
-        const imgData = await tag.getImageData(data, { height: 100 });
+        const imgData = await tag.getImageData(data, { height: 120 });
         preview.src = imgData;
     } catch (error) {
         console.log({ error });
