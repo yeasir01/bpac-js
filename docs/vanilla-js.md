@@ -1,6 +1,5 @@
-📢 This Readme is written for Vanilla JS users only to use in your react project please checkout the react-js readme.
-
 # Vanilla JS
+📢 This Readme is written for Vanilla JS users only to use in your react project please checkout the react-js readme.
 
 ## Setup
 1.  download the ./dist/bundle.js file from the repo. (Coming Soon)
