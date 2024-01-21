@@ -1,12 +1,18 @@
+<div align="center">
+    <img src="./.github/images/printer-logo.png" alt="bPac logo" height="100" />
+</div>
+<h1 align="center">
+    Brother bPac printer SDK for Web Browsers
+</h1>
+<div align="center">
+
 ![NPM Version](https://img.shields.io/npm/v/bpac-js)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/yeasir01/bpac-js/.github%2Fworkflows%2Fpublish.yml)
 ![GitHub License](https://img.shields.io/github/license/yeasir01/bpac-js)
 ![NPM Downloads](https://img.shields.io/npm/dt/bpac-js)
 
-<div align="center">
-    <img src="./.github/images/printer-logo.png" alt="bPac logo" height="100" />
-    <h1 align="center">Brother bPac printer SDK for Web Browsers</h1>
 </div>
+
 
 ## Overview
 
