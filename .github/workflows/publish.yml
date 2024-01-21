@@ -17,18 +17,18 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 18
           cache: "npm"
-      - name: Set NODE_ENV variable to Production
+      - name: SET NODE_ENV TO "Production"
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
-      - name: Run NPM Install
+      - name: INSTALL PACKAGES (INCLUDE DEV)
         run: npm install --frozen-lockfile --include=dev
-      - name: Run NPM Build
+      - name: BUILD/BUNDLE
         run: npm run build
-      - name: Create Release Pull Request or Publish
+      - name: CREATE VERSION & SETUP PULL REQUEST
         id: changesets
         uses: changesets/action@v1
         with:
