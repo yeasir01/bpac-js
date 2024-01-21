@@ -1,11 +1,16 @@
+![NPM Version](https://img.shields.io/npm/v/bpac-js)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/yeasir01/bpac-js/.github%2Fworkflows%2Fpublish.yml)
+![GitHub License](https://img.shields.io/github/license/yeasir01/bpac-js)
+![NPM Downloads](https://img.shields.io/npm/dt/bpac-js)
+
 <div align="center">
     <img src="./.github/images/printer-logo.png" alt="bPac logo" height="100" />
-    <h1 align="center">Brother QL Series Printer SDK for Web Browsers</h1>
+    <h1 align="center">Brother bPac printer SDK for Web Browsers</h1>
 </div>
 
 ## Overview
 
-This Brother SDK simplifies the usage of the b-PAC SDK, aiming to make it more accessible and providing inline documentation for ease of understanding. The SDK facilitates common tasks such as printing and obtaining image data by encapsulating the b-PAC functionality in a user-friendly interface.
+The Brother bPac printer SDK for Web Browsers simplifies the integration of the b-PAC SDK, providing a user-friendly interface for common tasks such as printing and obtaining image data. This SDK aims to enhance accessibility through modern JavaScript practices and thorough documentation, making it a valuable tool for developers working on web-based printing solutions
 
 ## Features
 
@@ -17,22 +22,26 @@ This Brother SDK simplifies the usage of the b-PAC SDK, aiming to make it more a
 
 ## Prerequisites
 
-Before using the Brother QL Series Printer SDK for Web Browsers, ensure you have the following prerequisites installed and configured (Windows Only):
+Before using the Brother Printer SDK for Web Browsers, ensure you meet the following prerequisites:
 
-1. **b-PAC Client:**
+1. **Supported Printer Model:**
+   - Check the list of supported printer models [here](https://www.brother.co.jp/eng/dev/bpac/environment/index.aspx#model). Ensure that your Brother printer is on the list for compatibility with this SDK. check src folder to identify current bpac version (example: bpac-v3.4.js).
 
-    - Install the b-Pac Client on your system. You can download it from [Brother Solutions Center](https://support.brother.com/g/s/es/dev/en/bpac/download/index.html?c=eu_ot&lang=en&navi=offall&comple=on&redirect=on#client).
-    - Follow the installation instructions provided by Brother to set up the b-Pac Client.
+2. **Driver Installation:**
+   - Install the appropriate printer driver for your Brother printer on your system. Visit the [Brother Solutions Center](https://support.brother.com/g/s/es/dev/en/bpac/download/index.html?c=eu_ot&lang=en&navi=offall&comple=on&redirect=on#client) to download and follow the installation instructions provided by Brother.
 
-2. **Brother b-PAC Extension:**
+3. **Template Printing Setup:**
+   - Ensure that you can successfully print directly from the template file. This may involve configuring your printer settings.
 
-    - Install the Brother b-Pac extension for your web browser. You can find it in the browser's extension store. Please ensure that the extension is activated and running.
+4. **Brother b-PAC Extension:**
+   - Install the Brother b-Pac extension for your web browser from the respective extension store. Ensure that the extension is activated and running.
 
     **Extension Links:**
-
     - [Brother b-Pac Extension for Chrome](https://chromewebstore.google.com/detail/ilpghlfadkjifilabejhhijpfphfcfhb) - Link to Chrome Extension.
     - [Brother b-Pac Extension for Edge](https://microsoftedge.microsoft.com/addons/detail/brother-bpac-extension/kmopihekhjobijiipnloimfdgjddbnhg) - Link to Edge Extension.
     - [Brother b-Pac Extension for Firefox](https://qflow-badge.azurewebsites.net/badgetemplates/bpac.xpi) - Link to Firefox Add-ons.
+
+Ensure that all prerequisites are met to guarantee a seamless experience.
 
 ## Getting Started
 
@@ -44,7 +53,7 @@ $ npm i bpac-js
 
 ### 2. Explore Documentation:
 
-Visit the examples section in the repository to explore detailed guides and examples for utilizing the SDK functionalities.
+Visit the docs section in this repository to explore detailed guides and examples for utilizing the SDK functionalities.
 
 ### 3. Contribute:
 

@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/extensions
-import * as bpac from "./bpac.js";
+import * as bpac from "./bpac-v3.4.js";
 
 // Types & Interface
 type TDate = {
@@ -64,7 +64,7 @@ const getAbsolutePath = (
     return filePathOrFileName;
 };
 
-const open = async (path: string): Promise<boolean> => {
+const openTemplate = async (path: string): Promise<boolean> => {
     const isOpen = await doc.Open(path);
 
     if (isOpen) {
@@ -73,6 +73,18 @@ const open = async (path: string): Promise<boolean> => {
 
     throw new Error(
         "Failed to open template file, please check path and try again.",
+    );
+};
+
+const closeTemplate = async (): Promise<boolean> => {
+    const isClosed = await doc.Close();
+
+    if (isClosed) {
+        return true;
+    }
+
+    throw new Error(
+        "Failed to close template file.",
     );
 };
 
@@ -211,12 +223,12 @@ class BrotherSdk {
         const printOpt = printQuality[config?.quality || "default"];
 
         await this.#isPrintReady();
-        await open(this.templatePath);
+        await openTemplate(this.templatePath);
         await populateObjects(data);
         await doc.StartPrint(printName, printOpt);
         await doc.PrintOut(copies, 0);
         await doc.EndPrint();
-        await doc.Close();
+        await closeTemplate();
 
         return true;
     }
@@ -244,10 +256,10 @@ class BrotherSdk {
         const width = opts?.width || 0;
 
         await this.#isPrintReady();
-        await open(this.templatePath);
+        await openTemplate(this.templatePath);
         await populateObjects(data);
         const base64Data = await doc.GetImageData(4, width, height);
-        await doc.Close();
+        await closeTemplate();
 
         return `${base64Data}`;
     }
@@ -278,9 +290,9 @@ class BrotherSdk {
      */
     async getPrinterName(): Promise<string> {
         await this.#isPrintReady();
-        await open(this.templatePath);
+        await openTemplate(this.templatePath);
         const printer = await doc.GetPrinterName();
-        await doc.Close();
+        await closeTemplate();
         return printer;
     }
 
@@ -334,10 +346,10 @@ class BrotherSdk {
         );
 
         await this.#isPrintReady();
-        await open(this.templatePath);
+        await openTemplate(this.templatePath);
         await populateObjects(data);
         const status = await doc.Export(encodingType, destinationPath, resolution);
-        await doc.Close();
+        await closeTemplate();
 
         if (status) {
             return true;
