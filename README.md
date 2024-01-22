@@ -53,9 +53,16 @@ Ensure that all prerequisites are met to guarantee a seamless experience.
 
 ### 1. Install the package:
 
+Package Manager
 ```bash
 $ npm i bpac-js
 ```
+
+Content Delivery Network - Latest
+```link
+https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs
+```
+Note: While using the `latest` tag is convenient, it is recommended to exercise caution, especially in production environments. The latest tag always points to the most recent version, which may include breaking changes. To ensure stability, consider specifying a specific version.
 
 ### 2. Explore Documentation:
 
@@ -68,35 +75,40 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 ## Usage
 
 ```javascript
-// Example: Printing a label
-import BrotherSdk from "bpac-js";
+// CommonJS Script File
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.mjs";
+
+const printBtn = document.getElementById("print-btn");
 
 const tag = new BrotherSdk({
-    templatePath: "C:/Templates/first.lbx",
-    exportPath: "C:/Users/YourName/Desktop/Exported Labels/",
+    templatePath: "C:/Templates/shoe-template.lbx",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
 });
 
-const print = async () => {
-    try {
-        const data = { 
-            title: "Canned Soup", 
-            price: "$2.99" 
-        };
+// The keys and values must match the objects/types in the template file.
+const data = {
+    title: "Air Force 1",
+    price: "$149.99",
+    barcode: "091207567724",
+    date: new Date("2024-1-20"),
+};
 
-        const opts = {
-            copies: 1,
-            printName: "Canned Soup Label",
-            quality: "highQuality",
-        };
-        
-        const status = await tag.print(data, opts);
-        console.log({ status });
-    } catch (err) {
-        console.log(err);
+const options = {
+    copies: 1, // Optional - Defaults to 1
+    printName: "Air Force Label", // Optional - Defaults to BPAC-Document
+    quality: "high" // Optional - Defaults to "default"
+}
+
+const sendToPrinter = async () => {
+    try {
+        const isPrinted = await tag.print(data, options);
+        console.log({isPrinted})
+    } catch (error) {
+        console.log({error})
     }
 };
 
-print();
+printBtn.addEventListener("click", sendToPrinter);
 ```
 
 ## Acknowledgments

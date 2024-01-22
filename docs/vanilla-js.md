@@ -9,7 +9,7 @@
 ### Printer Name
 ```javascript
 // script.js file
-import BrotherSdk from "./bundle.js";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
 
 const getNameBtn = document.getElementById("get-name-btn");
 
@@ -32,10 +32,30 @@ getNameBtn.addEventListener("click", getName);
 
 ```
 
+### List of Printer Names
+```javascript
+// script.js file
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
+
+const getNameBtn = document.getElementById("get-name-btn");
+
+const getNames = async () => {
+    try {
+        const printers = await BrotherSdk.getPrinterList();
+        console.log({printers}) // Output: {printers: ["Brother QL-820NWB", "Brother PT-9800PCN"]}
+    } catch (error) {
+        console.log({error})
+    }
+};
+
+getNameBtn.addEventListener("click", getNames);
+
+```
+
 ### Printing
 ```javascript
 // script.js file
-import BrotherSdk from "./bundle.js";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
 
 const printBtn = document.getElementById("print-btn");
 
@@ -55,7 +75,7 @@ const data = {
 const options = {
     copies: 1, // Optional - Defaults to 1
     printName: "Air Force Label", // Optional - Defaults to BPAC-Document
-    quality: "highQuality" // Optional - Defaults to "default"
+    quality: "high" // Optional - Defaults to "default"
 }
 
 const sendToPrinter = async () => {
@@ -74,7 +94,7 @@ printBtn.addEventListener("click", sendToPrinter);
 ### Preview
 ```javascript
 // script.js file
-import BrotherSdk from "./bundle.js";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
 
 const previewBtn = document.getElementById("preview-btn");
 const imgOutput = document.getElementById("img")

@@ -2,13 +2,13 @@
   "name": "bpac-js",
   "version": "2.0.3",
   "description": "High level API for interacting with the Brother BPAC SDK",
-  "main": "./lib/index.js",
-  "module": "./lib/index.mjs",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "lint": "eslint src/ --fix",
-    "dev": "tsup src/index.ts --watch",
+    "lint": "eslint ./src --fix",
+    "dev": "tsup ./src/**/*.ts --watch",
     "type-check": "tsc",
     "version": "npx changeset"
   },
@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/yeasir01/bpac-js/issues"
   },
-  "keywords": [],
+  "keywords": ["bpac", "brother", "print", "barcode", "web print"],
   "author": "Yeasir H. (https://yeasirhugais.com)",
   "license": "MIT",
   "devDependencies": {

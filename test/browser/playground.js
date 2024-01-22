@@ -1,4 +1,4 @@
-import BrotherSdK from "../../lib/index.mjs"
+import BrotherSdK from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.mjs"
 
 const printBtn = document.getElementById("print-btn");
 const previewBtn = document.getElementById("preview-btn");
@@ -6,7 +6,7 @@ const exportBtn = document.getElementById("export-btn");
 const preview = document.getElementById("preview");
 
 const tag = new BrotherSdK({
-    templatePath: "C:/Users/YMH/Desktop/example.lbx",
+    templatePath: "https://github.com/yeasir01/shelf-tags/raw/main/templates/shelf_tag.lbx",
     exportDir: "C:/Users/YMH/Desktop/Exported Labels/",
 });
 
@@ -29,7 +29,7 @@ const printTag = async () => {
 const previewTag = async () => {
     try {
         preview.src = "";
-        const imgData = await tag.getImageData(data, { height: 120 });
+        const imgData = await tag.getImageData({}, { height: 120 });
         preview.src = imgData;
     } catch (error) {
         console.log({ error });

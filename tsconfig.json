@@ -16,11 +16,11 @@
         // compatibility with tools like tsup
         "allowJs": true, // Permits inclusion of JavaScript files within the project, enabling a gradual migration to TypeScript.
         "checkJs": false, //Disables type checking for JavaScript files, focusing on TypeScript for type safety.
-        "lib": ["es2022", "dom", "dom.iterable"] //Includes additional libraries for DOM-related features and newer ECMAScript features,
+        "lib": ["ES2017", "DOM", "DOM.Iterable"] //Includes additional libraries for DOM-related features and newer ECMAScript features,
         //supporting web development scenarios.
     },
-    "include": ["src/**/*.ts", "src/**/*.js"], // Specifies the root directory and file pattern for inclusion in compilation,
+    "include": ["src/*.ts", "src/*.js"], // Specifies the root directory and file pattern for inclusion in compilation,
     // focusing on TypeScript files within the "src" directory.
-    "exclude": ["node_modules"] // Excludes the "node_modules" directory from compilation, avoiding redundant
+    "exclude": ["./node_modules"] // Excludes the "node_modules" directory from compilation, avoiding redundant
     // checks for external dependencies.
 }

@@ -4,7 +4,7 @@ const inDev = process.env.NODE_ENV !== "production";
 const inProd = process.env.NODE_ENV === "production"
 
 export default defineConfig({
-    entry: ["src/**/*.ts"],
+    entry: ["src/index.ts"],
     clean: true,
     splitting: false,
     sourcemap: inDev,
@@ -12,5 +12,4 @@ export default defineConfig({
     bundle: true,
     format: ["esm", "cjs"],
     dts: true,
-    outDir: "lib",
 });
