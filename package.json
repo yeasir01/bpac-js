@@ -1,6 +1,6 @@
 {
   "name": "bpac-js",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "High level API for interacting with the Brother BPAC SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -19,7 +19,13 @@
   "bugs": {
     "url": "https://github.com/yeasir01/bpac-js/issues"
   },
-  "keywords": ["bpac", "brother", "print", "barcode", "web print"],
+  "keywords": [
+    "bpac",
+    "brother",
+    "print",
+    "barcode",
+    "web print"
+  ],
   "author": "Yeasir H. (https://yeasirhugais.com)",
   "license": "MIT",
   "devDependencies": {
