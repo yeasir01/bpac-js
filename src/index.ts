@@ -1,30 +1,31 @@
 // eslint-disable-next-line import/extensions
 import * as bpac from "./bpac-v3.4.js";
 
-// Types & Interface
-type TDate = {
-    [key: string]: string | Date;
-};
+// Types
+type Data = Record<string, string | Date>;
+type NumberEnum = Record<string, number>;
 
-type TConfig = {
-    copies: number;
-    printName: string;
-    quality: string;
-};
+type Config = {
+    copies?: number;
+    printName?: string;
+    quality?: string;
+}
 
-type TBrotherSdk = {
-    templatePath: string;
-    exportDir: string;
-};
+const QUALITY:NumberEnum = Object.freeze({
+    default: 0x0,
+    fast: 0x01000000,
+    high: 0x02000000,
+});
 
-type NumberEnum = {
-    [key: string]: number;
-};
+const OBJECT_TYPE: NumberEnum = Object.freeze({
+    text: 0,
+    barcode: 1,
+    image: 2,
+    datetime: 3,
+    clipart: 4,
+});
 
-// Helpers
-const doc = bpac.IDocument;
-
-const fileType: NumberEnum = Object.freeze({
+const FILE_TYPE: NumberEnum = Object.freeze({
     default: 1,
     lbx: 1,
     lbl: 2,
@@ -33,20 +34,9 @@ const fileType: NumberEnum = Object.freeze({
     paf: 5,
 });
 
-const objectType: NumberEnum = Object.freeze({
-    TEXT: 0,
-    BARCODE: 1,
-    IMAGE: 2,
-    DATETIME: 3,
-    CLIPART: 4,
-});
+const doc = bpac.IDocument;
 
-const printQuality: NumberEnum = Object.freeze({
-    default: 0x0,
-    fastPrint: 0x01000000,
-    highQuality: 0x02000000,
-});
-
+// Helpers
 const getAbsolutePath = (
     basePath: string,
     filePathOrFileName: string,
@@ -83,12 +73,10 @@ const closeTemplate = async (): Promise<boolean> => {
         return true;
     }
 
-    throw new Error(
-        "Failed to close template file.",
-    );
+    throw new Error("Failed to close template file.");
 };
 
-const populateObjects = async (data: TDate): Promise<boolean> => {
+const populateObjects = async (data: Data): Promise<boolean> => {
     const props: string[] = Object.keys(data);
 
     // eslint-disable-next-line no-restricted-syntax
@@ -97,7 +85,7 @@ const populateObjects = async (data: TDate): Promise<boolean> => {
         const obj = await doc.GetObject(prop);
 
         if (!obj) {
-            await doc.Close();
+            await closeTemplate();
             throw new Error(
                 `There is no object in the specified template with the name of "${prop}".`,
             );
@@ -106,19 +94,19 @@ const populateObjects = async (data: TDate): Promise<boolean> => {
         const type = await obj.Type;
 
         switch (type) {
-        case objectType.TEXT:
+        case OBJECT_TYPE.text:
             obj.Text = value;
             break;
-        case objectType.IMAGE:
+        case OBJECT_TYPE.image:
             await obj.SetData(0, value, 4);
             break;
-        case objectType.DATETIME:
+        case OBJECT_TYPE.datetime:
             await obj.SetData(0, value);
             break;
-        case objectType.BARCODE:
+        case OBJECT_TYPE.barcode:
             await doc.SetBarcodeData(0, value);
             break;
-        case objectType.CLIPART:
+        case OBJECT_TYPE.clipart:
             await obj.SetData(0, value, 0);
             break;
         default:
@@ -138,21 +126,22 @@ class BrotherSdk {
     exportDir: string;
 
     /**
-     * Constructor for the BrotherSdk class.
      * @constructor
-     * @param {Object} options
-     * Configuration options.
-     * @param {String} options.templatePath
-     * Path (UNC) or URL to the template file Can be specified
-     * as \\your_server\your_folder\your_file for a file on a
-     * file-sharing server Can be specified as http://your_server/your_file
-     * for a template file URL.
-     * @param {String} options.exportDir
+     * Constructs a new instance of the BrotherSdk class, used
+     * for interacting with Brother SDK functionality.
+     * @param {Object} object
+     * @param {String} object.templatePath
+     * Specifies the path to the template file
+     * (supports various formats)
+     * - Local path: "c:/path/to/your/template.lbx"
+     * - UNC path: "\\server\share\template.lbx"
+     * - Remote URL: "http://yourserver.com/templates/label.lbx"
+     * @param {String} [object.exportDir = ""]
      * The path for exporting generated templates.
      */
-    constructor({ templatePath, exportDir }: TBrotherSdk) {
+    constructor({ templatePath, exportDir }: {templatePath: string, exportDir?: string}) {
         this.templatePath = templatePath;
-        this.exportDir = exportDir;
+        this.exportDir = exportDir || "";
         this.#ready = false;
         this.#initialize();
     }
@@ -203,24 +192,24 @@ class BrotherSdk {
     }
 
     /**
+     * @description
+     * Print label method
      * @param {object} data
-     * An object containing key-value pairs, where each key represents an object ID,
+     * an object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
      * @param {object} config
-     * Configuration options
-     * @param {number} config.copies
-     * The number of copies to be printed.
-     * @param {string} config.printNamePrintConfig
-     * The name of the document to be printed.
-     * @param {keyof printQuality} config.quality
-     * Print quality.
-     * @returns {boolean}
-     * A promise that resolves with a boolean.
+     * configuration options
+     * @param {number} [config.copies = 1]
+     * number of copies to be printed.
+     * @param {string} [config.printName = "BPAC-Document"]
+     * print document name.
+     * @param {("default" | "fast" | "high")} [config.quality = "default"]
+     * print quality.
      */
-    async print(data: TDate, config: TConfig): Promise<boolean> {
+    async print(data: Data, config: Config): Promise<boolean> {
         const copies = config?.copies || 1;
         const printName = config?.printName || "BPAC-Document";
-        const printOpt = printQuality[config?.quality || "default"];
+        const printOpt = QUALITY[config?.quality || "default"];
 
         await this.#isPrintReady();
         await openTemplate(this.templatePath);
@@ -234,23 +223,25 @@ class BrotherSdk {
     }
 
     /**
+     * Get Image Data
+     * retrieves the image data of a label in Base64 encoded format
      * @param {object} data
-     * An object containing key-value pairs, where each key represents an object ID,
+     * an object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
      * @param {object} opts
-     * Config options.
+     * config options.
      * @param {string} opts.height
-     * If the vertical size (pixel) of the image to be acquired is specified as 0, it
+     * if the vertical size (pixel) of the image to be acquired is specified as 0, it
      * becomes a size that maintains the aspect ratio based on width.
      * @param {string} opts.width
-     * Horizontal size (pixel) of the image to be acquired. If 0 is specified,
+     * horizontal size (pixel) of the image to be acquired. If 0 is specified,
      * it becomes a size that maintains the aspect ratio based on height.
      * @returns {Promise<string>}
-     * returns a base64 string.
+     * a promise that resolves to a Base64 encoded string representing the image data.
      */
     async getImageData(
-        data: TDate,
-        opts: { height: number; width: number },
+        data: Data,
+        opts: { height?: number; width?: number; },
     ): Promise<string> {
         const height = opts?.height || 0;
         const width = opts?.width || 0;
@@ -265,12 +256,14 @@ class BrotherSdk {
     }
 
     /**
-     * Asynchronously retrieves a list of installed printers compatible with the SDK.
+     * @description
+     * Asynchronously retrieves the list of installed printers compatible with the bpac SDK.
+     *
      * @returns {Promise<string[]>}
-     * A promise that resolves to an array of strings representing
-     * the names of installed printers compatible with the 'bpac' SDK.
+     * a promise that resolves to an array of strings representing
+     * the names of the installed printers compatible with the 'bpac' SDK.
      * @throws {Error}
-     * If there's an issue while retrieving the printer list.
+     * if fails to retrieve the printer list.
      *
      */
     static async getPrinterList(): Promise<string[]> {
@@ -281,11 +274,12 @@ class BrotherSdk {
     }
 
     /**
-     * Asynchronously retrieves the name of currently selected printer for the instance.
-     *
-     * @returns {Promise<string>} A promise that resolves to a strings representing
-     * the name of the installed printer.
-     * @throws {Error} If there's an issue while retrieving the printer list.
+     * @description
+     * Asynchronously retrieves the name of the printer in this context.
+     * @returns {Promise<string>}
+     * a promise that resolves a name a printer.
+     * @throws {Error}
+     * if there's an issue while retrieving the printer list.
      *
      */
     async getPrinterName(): Promise<string> {
@@ -297,44 +291,39 @@ class BrotherSdk {
     }
 
     /**
+     * @description
      * Asynchronously exports a file.
-     * @param {object} data
-     * An object containing key-value pairs, where each key represents
+     * @param {Object} data
+     * an object containing key-value pairs, where each key represents
      * an object ID, and the corresponding value is the text to be set on that object.
-     * @param {string} filePathOrFileName
-     *  Path or file name with extension. If initiated with:
-     *  - Full path (e.g., 'C:/Users/YourName/Desktop/Exported Labels/cool-label.lbx')
-     *  - Only file name with extension (e.g., 'cool-label.lbx').
-     * @param {keyof fileType} encoding
-     * File encoding type.
-     *  - default: Same type as the currently open template.
-     *  - lbx: LBX file type.
-     *  - lbl: P-touch Editor 4.2 (older format).
-     *  - lbi: LBI file type.
-     *  - bmp: BMP (monochrome).
-     *  - paf: PAF file type.
-     * @param {number} resolution
-     *  Resolution in dpi used for the conversion into bitmap format.
+     * @param {String} [filePathOrFileName = ""]
+     * provide a file name "myLabel.lbx" and the file will be stored in the set exportDir.
+     * provide a full path to override the exportDir. "C:/Templates/myLabel.lbx"
+     * @param {("default" | "lbx" | "lbl" | "lbi" | "bmp" | "paf")} [encoding = "default"]
+     * file encoding type.
+     * @param {Number} [resolution = 0]
+     *  provide a resolution in dpi used for the conversion into bitmap format.
      *  Specifies the resolution of the output device.
      *  (Screen: 72 or 96; output to SC-2000: 600)
      *  If a value of 0 is specified, the printer resolution is used.
-     *  Encoding is only valid for LBI format and BMP format.
+     *
+     *  This is only valid for LBI format and BMP formats.
      * @returns {Promise<boolean>}
-     * A Promise that resolves to a boolean indicating the export status.
+     * resolves a promise to a boolean indicating the export status.
      * @throws {Error}
-     * If an invalid encoding is supplied to the export method.
+     * fails to export.
      */
     async export(
-        data: TDate = {},
+        data: Data = {},
         filePathOrFileName: string = "",
         encoding = "default",
         resolution = 0,
-    ) {
-        const encodingType = fileType[encoding || "default"];
+    ): Promise<boolean> {
+        const encodingType = FILE_TYPE[encoding || "default"];
 
         if (Number.isNaN(encodingType)) {
             throw new Error(
-                `Invalid encoding type. Expected (${Object.keys(fileType).join(
+                `Invalid encoding type. Expected (${Object.keys(FILE_TYPE).join(
                     " | ",
                 )}) received "${encoding}"`,
             );
@@ -348,14 +337,20 @@ class BrotherSdk {
         await this.#isPrintReady();
         await openTemplate(this.templatePath);
         await populateObjects(data);
-        const status = await doc.Export(encodingType, destinationPath, resolution);
+        const status = await doc.Export(
+            encodingType,
+            destinationPath,
+            resolution,
+        );
         await closeTemplate();
 
         if (status) {
             return true;
         }
 
-        throw new Error("Export failed: Please check the export directory and filename.");
+        throw new Error(
+            "Export failed: Please check the export directory and filename.",
+        );
     }
 }
 
