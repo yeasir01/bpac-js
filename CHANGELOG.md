@@ -1,5 +1,11 @@
 # bpac-js
 
+## 2.0.4
+
+### Patch Changes
+
+- 89b83b0: better error handling and documentation in codebase.
+
 ## 2.0.3
 
 ### Patch Changes
