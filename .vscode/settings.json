@@ -11,5 +11,7 @@
         "mount": [
             ["/", "./test/browser"]
         ]
-    }
+    },
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": false
 }
