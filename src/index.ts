@@ -8,10 +8,10 @@ type NumberEnum = Record<string, number>;
 type Config = {
     copies?: number;
     printName?: string;
-    quality?: string;
-}
+    quality?: "default" | "fast" | "high";
+};
 
-const QUALITY:NumberEnum = Object.freeze({
+const QUALITY: NumberEnum = Object.freeze({
     default: 0x0,
     fast: 0x01000000,
     high: 0x02000000,
@@ -131,15 +131,20 @@ class BrotherSdk {
      * for interacting with Brother SDK functionality.
      * @param {Object} object
      * @param {String} object.templatePath
-     * Specifies the path to the template file
-     * (supports various formats)
+     * Specifies the path to the template file (supports various formats)
      * - Local path: "c:/path/to/your/template.lbx"
      * - UNC path: "\\server\share\template.lbx"
      * - Remote URL: "http://yourserver.com/templates/label.lbx"
      * @param {String} [object.exportDir = ""]
      * The path for exporting generated templates.
      */
-    constructor({ templatePath, exportDir }: {templatePath: string, exportDir?: string}) {
+    constructor({
+        templatePath,
+        exportDir,
+    }: {
+        templatePath: string;
+        exportDir?: string;
+    }) {
         this.templatePath = templatePath;
         this.exportDir = exportDir || "";
         this.#ready = false;
@@ -192,16 +197,17 @@ class BrotherSdk {
     }
 
     /**
-     * @description
-     * Print label method
-     * @param {object} data
+     * **Method For Printing A Label**
+     *
+     * asynchronously print a label using the specified configurations.
+     *
+     * @param {Object} data
      * an object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
-     * @param {object} config
-     * configuration options
-     * @param {number} [config.copies = 1]
+     * @param {Object} config
+     * @param {Number} [config.copies = 1]
      * number of copies to be printed.
-     * @param {string} [config.printName = "BPAC-Document"]
+     * @param {String} [config.printName = "BPAC-Document"]
      * print document name.
      * @param {("default" | "fast" | "high")} [config.quality = "default"]
      * print quality.
@@ -223,28 +229,29 @@ class BrotherSdk {
     }
 
     /**
-     * Get Image Data
-     * retrieves the image data of a label in Base64 encoded format
+     * **Method For Retrieving The Label's Image Data**
+     *
+     * asynchronously retrieves and returns Base64-encoded image data for a label.
+     *
      * @param {object} data
      * an object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
-     * @param {object} opts
-     * config options.
-     * @param {string} opts.height
-     * if the vertical size (pixel) of the image to be acquired is specified as 0, it
+     * @param {object} options
+     * @param {string} options.height
+     * if the vertical size (dpi) of the image to be acquired is specified as 0, it
      * becomes a size that maintains the aspect ratio based on width.
-     * @param {string} opts.width
-     * horizontal size (pixel) of the image to be acquired. If 0 is specified,
+     * @param {string} options.width
+     * horizontal size (dpi) of the image to be acquired. If 0 is specified,
      * it becomes a size that maintains the aspect ratio based on height.
      * @returns {Promise<string>}
      * a promise that resolves to a Base64 encoded string representing the image data.
      */
     async getImageData(
         data: Data,
-        opts: { height?: number; width?: number; },
+        options: { height?: number; width?: number },
     ): Promise<string> {
-        const height = opts?.height || 0;
-        const width = opts?.width || 0;
+        const height = options?.height || 0;
+        const width = options?.width || 0;
 
         await this.#isPrintReady();
         await openTemplate(this.templatePath);
@@ -256,14 +263,15 @@ class BrotherSdk {
     }
 
     /**
-     * @description
-     * Asynchronously retrieves the list of installed printers compatible with the bpac SDK.
+     * **Retrieve The List Of Installed Printers**
+     *
+     * asynchronously retrieves the list of installed printers compatible with the bpac SDK.
      *
      * @returns {Promise<string[]>}
-     * a promise that resolves to an array of strings representing
-     * the names of the installed printers compatible with the 'bpac' SDK.
+     * a promise that resolves to an array of installed printers
+     * compatible with the 'bpac' SDK.
      * @throws {Error}
-     * if fails to retrieve the printer list.
+     * will throw an err if the method fails.
      *
      */
     static async getPrinterList(): Promise<string[]> {
@@ -274,12 +282,14 @@ class BrotherSdk {
     }
 
     /**
-     * @description
-     * Asynchronously retrieves the name of the printer in this context.
+     * **Retrieve The Printer's Name**
+     *
+     * asynchronously retrieves the printers name for the current context.
+     *
      * @returns {Promise<string>}
-     * a promise that resolves a name a printer.
+     * a promise that resolves with the name of the printer.
      * @throws {Error}
-     * if there's an issue while retrieving the printer list.
+     * if fails to get the printer name.
      *
      */
     async getPrinterName(): Promise<string> {
@@ -291,8 +301,10 @@ class BrotherSdk {
     }
 
     /**
-     * @description
-     * Asynchronously exports a file.
+     * **Export Label To File**
+     *
+     * asynchronously populate & export the template file to a specified format.
+     *
      * @param {Object} data
      * an object containing key-value pairs, where each key represents
      * an object ID, and the corresponding value is the text to be set on that object.
@@ -307,17 +319,16 @@ class BrotherSdk {
      *  (Screen: 72 or 96; output to SC-2000: 600)
      *  If a value of 0 is specified, the printer resolution is used.
      *
-     *  This is only valid for LBI format and BMP formats.
+     *  The resolution param is only valid for LBI and BMP formats.
      * @returns {Promise<boolean>}
-     * resolves a promise to a boolean indicating the export status.
      * @throws {Error}
-     * fails to export.
+     * If fails to export.
      */
     async export(
         data: Data = {},
         filePathOrFileName: string = "",
-        encoding = "default",
-        resolution = 0,
+        encoding: "default" | "lbx" | "lbl" | "lbi" | "bmp" | "paf" = "default",
+        resolution: number = 0,
     ): Promise<boolean> {
         const encodingType = FILE_TYPE[encoding || "default"];
 
