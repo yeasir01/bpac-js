@@ -9,6 +9,7 @@
         "forceConsistentCasingInFileNames": true, // Enforce consistent file casing for compatibility
         "resolveJsonModule": true, // Allow importing JSON files as modules
         "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
+        "allowImportingTsExtensions": true,
         "isolatedModules": true, // Treat each file as a separate module (important for React)
         "noEmit": true, //use tsup to emit & bundle
         "noUncheckedIndexedAccess": true,
@@ -19,8 +20,8 @@
         "lib": ["ES2017", "DOM", "DOM.Iterable"] //Includes additional libraries for DOM-related features and newer ECMAScript features,
         //supporting web development scenarios.
     },
-    "include": ["src/*.ts", "src/*.js"], // Specifies the root directory and file pattern for inclusion in compilation,
+    "include": ["src/**/*.ts", "src/**/*.js"], // Specifies the root directory and file pattern for inclusion in compilation,
     // focusing on TypeScript files within the "src" directory.
-    "exclude": ["./node_modules"] // Excludes the "node_modules" directory from compilation, avoiding redundant
+    "exclude": ["node_modules"] // Excludes the "node_modules" directory from compilation, avoiding redundant
     // checks for external dependencies.
 }
