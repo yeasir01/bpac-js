@@ -24,7 +24,7 @@ jobs:
           cache: "npm"
       - name: SET NODE_ENV TO "Production"
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
-      - name: INSTALL PACKAGES (INCLUDE DEV)
+      - name: INSTALL PACKAGES - INCLUDE DEV
         run: npm install --frozen-lockfile --include=dev
       - name: BUILD/BUNDLE
         run: npm run build
