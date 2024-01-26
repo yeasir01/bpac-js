@@ -4,16 +4,21 @@
         "es2022": true,
         "node": true
     },
-    "extends": ["eslint:recommended", "airbnb-base"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "airbnb-base",
+        "airbnb-typescript/base"
+    ],
     "parser": "@typescript-eslint/parser",
+    "root": true,
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+        "project": "./tsconfig.json"
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
-        "indent": ["error", 4],
-        "quotes": ["error", "double", { "allowTemplateLiterals": true }],
+        "@typescript-eslint/indent": ["error", 4],
+        "@typescript-eslint/quotes": ["error", "double"],
         "no-await-in-loop": "off"
     },
     "overrides": [
