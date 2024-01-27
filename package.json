@@ -10,6 +10,7 @@
     "lint": "eslint ./src --fix",
     "dev": "tsup ./src/**/*.ts --watch",
     "type-check": "tsc",
+    "test": "mocha test/**/*.spec.mjs",
     "version": "npx changeset"
   },
   "repository": {
@@ -32,8 +33,10 @@
     "@changesets/cli": "^2.27.1",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
+    "chai": "^5.0.3",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
+    "mocha": "^10.2.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   }
