@@ -26,9 +26,8 @@ export const getPrinters = async (): Promise<string[]> => {
     return printers;
 };
 
-// Fix these params
-export const startPrint = async (printName:string, options:number): Promise<boolean> => {
-    const isComplete = await doc.StartPrint(printName, options);
+export const startPrint = async (printName:string, bitmask:number): Promise<boolean> => {
+    const isComplete = await doc.StartPrint(printName, bitmask);
     return isComplete;
 };
 

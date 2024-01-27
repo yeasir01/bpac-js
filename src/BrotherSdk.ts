@@ -1,12 +1,12 @@
 import {
     getAbsolutePath,
-    getPrintOption,
-    getEncodingOption,
+    getExportType,
+    getFileExtension,
+    getStartPrintOptions,
 } from "./helpers";
 import {
     Data,
-    Config,
-    Encoding,
+    PrintConfig,
     ImageOptions,
 } from "./types";
 import {
@@ -129,30 +129,65 @@ export default class BrotherSdk {
     /**
      * **Method For Printing A Label**
      *
-     * asynchronously print a label using the specified configurations.
+     * Asynchronously print a label using the specified configurations.
      *
      * @param {Object} data
-     * an object containing key-value pairs, where each key represents an object ID,
+     * An object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
-     * @param {Object} config
-     * { object }
+     * @param {Object} [config]
+     * Optional
      * @param {Number} [config.copies = 1]
-     * number of copies to be printed.
+     * Number of copies to print.
      * @param {String} [config.printName = "BPAC-Document"]
-     * print document name.
-     * @param {String} [config.option = "default"]
-     * use the `PrinterOptions` enum for valid options. formally "quality"
+     * Print document name.
+     * @param {boolean} [config.autoCut = false]
+     * Auto cut is applied.
+     * @param {boolean} [config.cutPause = false]
+     * Pause to cut is applied. Valid only with models not supporting the auto cut function.
+     * @param {boolean} [config.cutMark = false]
+     * Cut mark is inserted. Valid only with models not supporting the auto cut function.
+     * @param {boolean} [config.halfCut = false]
+     * Executes half cut.
+     * @param {boolean} [config.chainPrint = false]
+     * Continuous printing is performed. The final label is not cut, but when the next
+     * labels are output, the preceding blank is cut in line with the cut option setting.
+     * @param {boolean} [config.tailCut = false]
+     * Whenever a label is output, the trailing end of the form is forcibly cut to
+     * leave a leading blank for the next label output.
+     * @param {boolean} [config.specialTape = false]
+     * No cutting is performed when printing on special tape.
+     * Valid only with PT-2430PC.
+     * @param {boolean} [config.cutAtEnd = false]
+     * "Cut at end" is performed.
+     * @param {boolean} [config.noCut = false]
+     * No cutting is performed. Valid only with models supporting cut functions.
+     * @param {boolean} [config.mirroring = false]
+     * Executes mirror printing.
+     * @param {boolean} [config.quality = false]
+     * Fine-quality printing is performed.
+     * @param {boolean} [config.highSpeed = false]
+     * High-speed printing is performed.
+     * @param {boolean} [config.highResolution = false]
+     * High-resolution printing is performed.
+     * @param {boolean} [config.color = false]
+     * Color printing is performed.
+     * @param {boolean} [config.mono = false]
+     * Monochrome printing is performed. Valid only with models supporting
+     * the color printing function.
+     * @param {boolean} [config.continue = false]
+     * Combines with printing for the following DoPrint( ) so that it is a single print job.
+     * As a result, when the next DoPrints are called up, the front margins are not output.
      */
-    async print(data: Data, config: Config): Promise<boolean> {
-        const copies:number = config?.copies || 1;
-        const printName:string = config?.printName || "BPAC-Document";
-        const opts:number = getPrintOption(config?.option);
+    async print(data: Data, config?: PrintConfig): Promise<boolean> {
+        const { copies = 1, printName = "BPAC-Document", ...rest } = config || {};
+
+        const bitmaskNumber = getStartPrintOptions(rest);
 
         await this.#isPrintReady();
 
         await openTemplate(this.templatePath);
         await populateObjectsInTemplate(data);
-        await startPrint(printName, opts);
+        await startPrint(printName, bitmaskNumber);
         await printOut(copies);
         await endPrint();
         await closeTemplate();
@@ -163,21 +198,21 @@ export default class BrotherSdk {
     /**
      * **Method For Retrieving The Label's Image Data**
      *
-     * asynchronously retrieves and returns Base64-encoded image data for a label.
+     * Asynchronously retrieves and returns Base64-encoded image data for a label.
      *
      * @param {object} data
-     * an object containing key-value pairs, where each key represents an object ID,
+     * An object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
      * @param {object} options
-     * { object }
+     * Optional
      * @param {string} options.height
-     * if the vertical size (dpi) of the image to be acquired is specified as 0, it
+     * If the vertical size (dpi) of the image to be acquired is specified as 0, it
      * becomes a size that maintains the aspect ratio based on width.
      * @param {string} options.width
-     * horizontal size (dpi) of the image to be acquired. If 0 is specified,
+     * Horizontal size (dpi) of the image to be acquired. If 0 is specified,
      * it becomes a size that maintains the aspect ratio based on height.
      * @returns {Promise<string>}
-     * a promise that resolves to a Base64 encoded string representing the image data.
+     * A promise that resolves to a Base64 encoded string representing the image data.
      */
     async getImageData(
         data: Data,
@@ -198,12 +233,12 @@ export default class BrotherSdk {
     /**
      * **Retrieve The Printer's Name**
      *
-     * asynchronously retrieves the printers name for the current context.
+     * Asynchronously retrieves the printers name for the current context.
      *
      * @returns {Promise<string>}
-     * a promise that resolves with the name of the printer.
+     * A promise that resolves with the name of the printer.
      * @throws {Error}
-     * fails to get the printer name.
+     * Fails to get the printer name.
      *
      */
     async getPrinterName(): Promise<string> {
@@ -217,35 +252,30 @@ export default class BrotherSdk {
     /**
      * **Export Label To File**
      *
-     * asynchronously populate & export a copy of the file in various formats.
+     * Asynchronously populate & export a copy of the file in various formats.
      *
      * @param {Object} data
-     * an object containing key-value pairs, where each key represents
+     * An object containing key-value pairs, where each key represents
      * an object ID, and the corresponding value is the text to be set on that object.
      * @param {String} [filePathOrFileName = ""]
-     * provide a file name or absolute path.
-     * - "myLabel.lbx" to be store in exportDir.
-     * - "C:/Templates/myLabel.lbx" to override the exportDir.
-     * @param {("default" | "lbx" | "lbl" | "lbi" | "bmp" | "paf")} [encoding = "default"]
-     * file encoding type.
+     * Provide a file name or absolute path.
+     * - e.g. = "myLabel.lbx" will be stored in exportDir.
+     * - e.g. = "C:/Templates/myLabel.lbx" to override the exportDir.
+     * - Supported types = .lbx | .lbl | .lbi | .bmp | .paf
      * @param {Number} [resolution = 0]
-     *  provide a resolution in dpi used for the conversion into bitmap format.
+     *  Provide a resolution in dpi used for the conversion into bitmap format.
      *  Specifies the resolution of the output device.
      *  (Screen: 72 or 96; output to SC-2000: 600)
      *  If a value of 0 is specified, the printer resolution is used.
      *
-     *  The resolution param is only valid for LBI and BMP formats.
-     * @returns {Promise<boolean>}
+     *  The resolution param is only valid for .lbi and .bmp extensions.
      * @throws {Error}
-     * fails to export.
+     * Fails to export.
      */
-    async export(
-        data: Data = {},
-        filePathOrFileName: string = "",
-        encoding: Encoding = Encoding.Default,
-        resolution: number = 0,
-    ): Promise<boolean> {
-        const fileType = getEncodingOption(encoding);
+    async export(data: Data, filePathOrFileName: string, resolution: number = 0): Promise<boolean> {
+        const fileExt = getFileExtension(filePathOrFileName);
+        const fileType = getExportType(fileExt);
+
         const path:string = getAbsolutePath(
             this.exportDir,
             filePathOrFileName,

@@ -1,10 +1,30 @@
 export type Data = Record<string, string | Date>;
 
-export type Config = {
+export type PrintOptions = {
     copies?: number;
     printName?: string;
-    option?: PrinterOptions;
 };
+
+export type StartPrintOptions = {
+    autoCut?: boolean;
+    cutPause?: boolean,
+    cutMark?: boolean,
+    halfCut?: boolean,
+    chainPrint?: boolean,
+    tailCut?: boolean,
+    specialTape?: boolean,
+    cutAtEnd?: boolean,
+    noCut?: boolean,
+    mirroring?: boolean,
+    quality?: boolean,
+    highSpeed?: boolean,
+    highResolution?: boolean,
+    color?: boolean,
+    mono?: boolean,
+    continue?: boolean,
+};
+
+export type PrintConfig = PrintOptions & StartPrintOptions;
 
 export type ImageOptions = {
     width?: number;
@@ -17,35 +37,4 @@ export enum ObjectTypes {
     Image = 2,
     Datetime = 3,
     Clipart = 4,
-}
-
-export enum Encoding {
-    Default = "default",
-    Lbx = "lbx",
-    Lbl = "lbl",
-    Lbi = "lbi",
-    Bmp = "bmp",
-    Paf = "paf",
-}
-
-export enum PrinterOptions {
-    Default = "default",
-    AutoCut = "auto-cut",
-    CutPause = "cut-pause",
-    CutMark = "cut-mark",
-    HalfCut = "half-cut",
-    ChainPrint = "chain-print",
-    TailCut = "tail-cut",
-    SpecialTape = "special-tape",
-    CutAtEnd = "cut-at-end",
-    NoCut = "no-cut",
-    Mirroring = "mirror",
-    Quality = "quality",
-    HighSpeed = "high-speed",
-    HighResolution = "high-resolution",
-    Color = "color",
-    Mono = "mono",
-    Continue = "continue",
-    Fast = "fast", // Deprecated: Use HighSpeed for faster printing.
-    High = "high", // Deprecated: Use HighResolution for higher print resolution.
 }

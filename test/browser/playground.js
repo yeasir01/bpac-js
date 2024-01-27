@@ -17,11 +17,11 @@ const data = {
     barcode: "074608352052",
     image: "C:/Users/YMH/Desktop/Storage Drive Files/Logos/Monogram/my-logo.png",
 };
-
+/* {autoCut: true, mirroring: true, specialTape:true} */
 const printTag = async () => {
     try {
-        const status = await tag.print(data);
-        console.log({ status });
+        const complete = await tag.print(data);
+        console.log({ complete });
     } catch (error) {
         console.log({ error });
     }
@@ -39,8 +39,8 @@ const previewTag = async () => {
 
 const exportTag = async () => {
     try {
-        const status = await tag.export(data, "my-tag.bmp", "bmp", 300);
-        console.log({status})
+        const complete = await tag.export(data, "custom-label.bmp", 300);
+        console.log({complete})
     } catch (error) {
         console.log({ error });
     }
