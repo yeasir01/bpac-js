@@ -1,24 +1,24 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - "**"
+    push:
+        branches:
+            - "**"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: "npm"
-      - name: INSTALL PACKAGES
-        run: npm install --frozen-lockfile
-      - name: TYPECHECK
-        run: npm run type-check
-      - name: LINT
-        run: npm run lint
-      - name: BUILD/BUNDLE
-        run: npm run build
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: "npm"
+            - name: INSTALL PACKAGES
+              run: npm install --frozen-lockfile
+            - name: TYPECHECK
+              run: npm run type-check
+            - name: LINT
+              run: npm run lint
+            - name: BUILD/BUNDLE
+              run: npm run build

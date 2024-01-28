@@ -89,13 +89,13 @@ export const populateObjectsInTemplate = async (data: Data): Promise<boolean> =>
             case ObjectTypes.Image:
                 await obj.SetData(0, value, 4);
                 break;
-            case ObjectTypes.Datetime:
+            case ObjectTypes.DateTime:
                 await obj.SetData(0, value);
                 break;
             case ObjectTypes.Barcode:
                 await doc.SetBarcodeData(0, value);
                 break;
-            case ObjectTypes.Clipart:
+            case ObjectTypes.ClipArt:
                 await obj.SetData(0, value, 0);
                 break;
             default:

@@ -1,38 +1,38 @@
 name: Publish
 
 on:
-  workflow_run:
-    workflows: [CI]
-    branches: [main]
-    types: [completed]
+    workflow_run:
+        workflows: [CI]
+        branches: [main]
+        types: [completed]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  contents: write
-  pull-requests: write
+    contents: write
+    pull-requests: write
 
 jobs:
-  publish:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: "npm"
-      - name: SET NODE_ENV TO "Production"
-        run: echo "NODE_ENV=production" >> $GITHUB_ENV
-      - name: INSTALL PACKAGES - INCLUDE DEV
-        run: npm install --frozen-lockfile --include=dev
-      - name: BUILD/BUNDLE
-        run: npm run build
-      - name: CREATE VERSION & SETUP PULL REQUEST
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: npx changeset publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    publish:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: "npm"
+            - name: SET NODE_ENV TO "Production"
+              run: echo "NODE_ENV=production" >> $GITHUB_ENV
+            - name: INSTALL PACKAGES - INCLUDE DEV
+              run: npm install --frozen-lockfile --include=dev
+            - name: BUILD/BUNDLE
+              run: npm run build
+            - name: CREATE VERSION & SETUP PULL REQUEST
+              id: changesets
+              uses: changesets/action@v1
+              with:
+                  publish: npx changeset publish
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

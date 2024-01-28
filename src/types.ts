@@ -35,6 +35,6 @@ export enum ObjectTypes {
     Text = 0,
     Barcode = 1,
     Image = 2,
-    Datetime = 3,
-    Clipart = 4,
+    DateTime = 3,
+    ClipArt = 4,
 }
