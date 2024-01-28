@@ -70,6 +70,10 @@ export const getStartPrintOptions = (options: StartPrintOptions): number => {
 };
 
 export const getFileExtension = (filePathOrFileName:string): string => {
+    if (!filePathOrFileName) {
+        throw new Error("filePathOrFileName missing or undefined.");
+    }
+
     const lastDotIdx:number = filePathOrFileName.lastIndexOf(".");
 
     if (lastDotIdx === -1) {
