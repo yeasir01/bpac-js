@@ -9,7 +9,7 @@
 ### Printer Name
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const getNameBtn = document.getElementById("get-name-btn");
 
@@ -35,7 +35,7 @@ getNameBtn.addEventListener("click", getName);
 ### List of Printer Names
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const getNameBtn = document.getElementById("get-name-btn");
 
@@ -55,7 +55,7 @@ getNameBtn.addEventListener("click", getNames);
 ### Printing
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 
@@ -75,7 +75,7 @@ const data = {
 const options = {
     copies: 1, // Optional - Defaults to 1
     printName: "Air Force Label", // Optional - Defaults to BPAC-Document
-    quality: "high" // Optional - Defaults to "default"
+    highResolution: true // Optional
 }
 
 const sendToPrinter = async () => {

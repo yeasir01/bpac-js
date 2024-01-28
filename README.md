@@ -60,7 +60,7 @@ $ npm i bpac-js
 
 Content Delivery Network - Latest
 ```link
-https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs
+https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js
 ```
 Note: While using the `latest` tag is convenient, it is recommended to exercise caution, especially in production environments. The latest tag always points to the most recent version, which may include breaking changes. To ensure stability, consider specifying a specific version.
 
@@ -76,7 +76,7 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 
 ```javascript
 // CommonJS Script File
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.mjs";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 
