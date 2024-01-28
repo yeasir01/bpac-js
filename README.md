@@ -94,9 +94,9 @@ const data = {
 };
 
 const options = {
-    copies: 1, // Optional - Defaults to 1
-    printName: "Air Force Label", // Optional - Defaults to BPAC-Document
-    quality: "high" // Optional - Defaults to "default"
+    copies: 1, // Optional - Defaults: 1
+    printName: "Air Force Label", // Optional - Defaults: BPAC-Document
+    highResolution: true // Optional
 }
 
 const sendToPrinter = async () => {
