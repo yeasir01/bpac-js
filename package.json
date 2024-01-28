@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
+    "build:dev": "npm run type-check && npm run lint && npm run test && npm run build ",
     "lint": "eslint --fix .",
     "dev": "tsup --watch",
     "type-check": "tsc",
