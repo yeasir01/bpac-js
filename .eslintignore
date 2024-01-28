@@ -3,7 +3,6 @@ node_modules/
 .changeset/
 .vscode/
 .github/
-test/
 dist/
 lib/
 *.js

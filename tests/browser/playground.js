@@ -1,5 +1,5 @@
-//import BrotherSdK from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.4/dist/index.mjs";
-import BrotherSdk from "../../dist/index.mjs";
+//import BrotherSdK from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+import BrotherSdk from "../../dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 const previewBtn = document.getElementById("preview-btn");

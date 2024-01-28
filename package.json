@@ -3,15 +3,18 @@
   "version": "2.0.3",
   "description": "High level API for interacting with the Brother BPAC SDK",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsup",
-    "lint": "eslint ./src --fix",
-    "dev": "tsup ./src/**/*.ts --watch",
+    "lint": "eslint --fix .",
+    "dev": "tsup --watch",
     "type-check": "tsc",
-    "test": "mocha test/**/*.spec.mjs",
+    "test": "mocha",
     "version": "npx changeset"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,13 @@
   "bugs": {
     "url": "https://github.com/yeasir01/bpac-js/issues"
   },
+  "files": [
+    "LICENSE",
+    "CHANGELOG.md",
+    "README.md",
+    "package.json",
+    "dist/"
+  ],
   "keywords": [
     "bpac",
     "brother",
@@ -31,12 +41,15 @@
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "chai": "^5.0.3",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "mocha": "^10.2.0",
+    "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   }
