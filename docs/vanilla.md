@@ -125,3 +125,37 @@ const previewImage = async () => {
 previewBtn.addEventListener("click", previewImage);
 
 ```
+
+### Export
+```javascript
+// script.js file
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
+
+const expBtn = document.getElementById("export-btn");
+
+const tag = new BrotherSdk({
+    templatePath: "C:/Templates/shoe-template.lbx",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+});
+
+// The keys and values must match the objects/types in the template file.
+const data = {
+    title: "Air Force 1",
+    price: "$149.99",
+    barcode: "091207567724",
+    date: new Date("2024-1-20"),
+};
+
+const exportFile = async () => {
+    try {
+        // Docs >> Options >> Supported Export Extensions - for support file types
+        const success = await tag.export(data, "Air-Force.bmp", 300);
+        console.log({success}) // Output: {success: true}
+    } catch (error) {
+        console.log({error})
+    }
+};
+
+expBtn.addEventListener("click", exportFile);
+
+```
