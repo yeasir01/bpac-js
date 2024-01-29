@@ -75,7 +75,7 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 ## Usage
 
 ```javascript
-// CommonJS Script File
+// Script File
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
