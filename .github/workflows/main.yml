@@ -20,5 +20,7 @@ jobs:
               run: npm run type-check
             - name: LINT
               run: npm run lint
+            - name: TEST
+              run: npm run test
             - name: BUILD/BUNDLE
               run: npm run build
