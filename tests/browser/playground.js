@@ -1,5 +1,5 @@
 //import BrotherSdK from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
-import BrotherSdk from "../../dist/index.js";
+import { BrotherSdk } from "../../dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 const previewBtn = document.getElementById("preview-btn");
@@ -20,7 +20,7 @@ const data = {
 /* {autoCut: true, mirroring: true, specialTape:true} */
 const printTag = async () => {
     try {
-        const complete = await tag.print(data);
+        const complete = await tag.print(data, { mirroring: true, autoCut: true });
         console.log({ complete });
     } catch (error) {
         console.log({ error });

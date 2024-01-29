@@ -1,12 +1,7 @@
 # Vanilla JS
 📢 This Readme is written for Vanilla JS users only to use in your react project please checkout the react-js readme.
 
-## Setup
-1.  download the ./dist/bundle.js file from the repo. (Coming Soon)
-2.  include the file in your assets folder (./assets/js/bundle.js)
-3.  create your script file (./assets/js/script.js)
-
-### Printer Name
+### Get Printer Name
 ```javascript
 // script.js file
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
@@ -32,7 +27,7 @@ getNameBtn.addEventListener("click", getName);
 
 ```
 
-### List of Printer Names
+### Get List Of Printers
 ```javascript
 // script.js file
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
@@ -52,7 +47,7 @@ getNameBtn.addEventListener("click", getNames);
 
 ```
 
-### Printing
+### Print
 ```javascript
 // script.js file
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
@@ -72,10 +67,11 @@ const data = {
     date: new Date("2024-1-20"),
 };
 
+// Docs >> Options >> Print Config Options - for all options
 const options = {
-    copies: 1, // Optional - Defaults to 1
-    printName: "Air Force Label", // Optional - Defaults to BPAC-Document
-    highResolution: true // Optional
+    copies: 1,
+    printName: "Air Force Label",
+    highResolution: true
 }
 
 const sendToPrinter = async () => {
