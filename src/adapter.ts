@@ -8,7 +8,7 @@ export const openTemplate = async (path: string): Promise<boolean> => {
 
     if (!isOpen) {
         throw new Error(
-            "Failed to open template file, please check path and try again.",
+            "Failed to open template file.",
         );
     }
 
@@ -41,7 +41,7 @@ export const printOut = async (copies: number): Promise<boolean> => {
 
     if (!isPrinted) {
         await closeTemplate();
-        throw new Error("Failed to print.");
+        throw new Error("Failed to print out.");
     }
 
     return true;
