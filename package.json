@@ -36,7 +36,9 @@
     "brother",
     "print",
     "barcode",
-    "web print"
+    "web print",
+    "brother-label-printer",
+    "brother-ql"
   ],
   "author": "Yeasir H. (https://yeasirhugais.com)",
   "license": "MIT",

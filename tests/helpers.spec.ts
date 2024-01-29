@@ -80,7 +80,6 @@ describe("Helpers", () => {
         });
     });
 
-    // @todo: finish test for this
     describe("getExportType()", () => {
         it("Should be a function", () => {
             expect(getExportType).to.be.a("function");
@@ -98,6 +97,7 @@ describe("Helpers", () => {
         });
     });
 
+    // @todo: more coverage for this
     describe("getStartPrintOptions()", () => {
         it("Should be a function", () => {
             expect(getStartPrintOptions).to.be.a("function");

@@ -1,5 +1,32 @@
-# Vanilla JS
-📢 This Readme is written for Vanilla JS users only to use in your react project please checkout the react-js readme.
+# Setup
+
+### Package Manager
+Install package
+
+```sh
+$ npm install bpac-js
+```
+Import module - named and defaults ok.
+
+```javascript
+import BrotherBrotherSdk from "bpac-js";
+```
+```javascript
+import { BrotherBrotherSdk } from "bpac-js";
+```
+
+### CDN
+Include import at the top of your script file. And set type to module in .html (requires live-server or equivalent).
+
+```javascript
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/index.js";
+```
+
+```html
+<script type="module" src="script.js"></script>
+```
+
+## Usage
 
 ### Get Printer Name
 ```javascript
@@ -10,7 +37,7 @@ const getNameBtn = document.getElementById("get-name-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
 });
 
 // Returns the printer associated with the template in string format
@@ -56,7 +83,7 @@ const printBtn = document.getElementById("print-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
 });
 
 // The keys and values must match the objects/types in the template file.
@@ -97,7 +124,7 @@ const imgOutput = document.getElementById("img")
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
 });
 
 // The keys and values must match the objects/types in the template file.
@@ -135,7 +162,7 @@ const expBtn = document.getElementById("export-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
 });
 
 // The keys and values must match the objects/types in the template file.
