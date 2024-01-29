@@ -4,15 +4,63 @@ import { Data, ObjectTypes } from "./types";
 const doc = bpac.IDocument;
 
 export const openTemplate = async (path: string): Promise<boolean> => {
-    const isOpen = await doc.Open(path);
+    const isOpen:boolean = await doc.Open(path);
 
-    if (isOpen) {
-        return true;
+    if (!isOpen) {
+        throw new Error(
+            "Failed to open template file, please check path and try again.",
+        );
     }
 
-    throw new Error(
-        "Failed to open template file, please check path and try again.",
-    );
+    return true;
+};
+
+export const closeTemplate = async (): Promise<boolean> => {
+    const isClosed = await doc.Close();
+
+    if (!isClosed) {
+        throw new Error("Failed to close template file.");
+    }
+
+    return true;
+};
+
+export const startPrint = async (printName:string, bitmask:number): Promise<boolean> => {
+    const isStarted:boolean = await doc.StartPrint(printName, bitmask);
+
+    if (!isStarted) {
+        await closeTemplate();
+        throw new Error("Failed to start the print process.");
+    }
+
+    return true;
+};
+
+export const printOut = async (copies: number): Promise<boolean> => {
+    const isPrinted:boolean = await doc.PrintOut(copies, 0);
+
+    if (!isPrinted) {
+        await closeTemplate();
+        throw new Error("Failed to print.");
+    }
+
+    return true;
+};
+
+export const endPrint = async () => {
+    const hasEnded:boolean = await doc.EndPrint();
+
+    if (!hasEnded) {
+        await closeTemplate();
+        throw new Error("Failed to end print process.");
+    }
+
+    return true;
+};
+
+export const imageData = async (width:number, height:number): Promise<string> => {
+    const data = await doc.GetImageData(4, width, height);
+    return data;
 };
 
 export const getPrinterName = async (): Promise<string> => {
@@ -26,43 +74,15 @@ export const getPrinters = async (): Promise<string[]> => {
     return printers;
 };
 
-export const startPrint = async (printName:string, bitmask:number): Promise<boolean> => {
-    const isComplete = await doc.StartPrint(printName, bitmask);
-    return isComplete;
-};
+export const exportTemplate = async (type:number, dest:string, res:number): Promise<boolean> => {
+    const isExported:boolean = await doc.Export(type, dest, res);
 
-export const printOut = async (copies: number): Promise<boolean> => {
-    const isComplete = await doc.PrintOut(copies, 0);
-    return isComplete;
-};
-
-export const endPrint = async () => {
-    const isComplete = await doc.EndPrint();
-    return isComplete;
-};
-
-export const imageData = async (width:number, height:number): Promise<string> => {
-    const data = await doc.GetImageData(4, width, height);
-    return data;
-};
-
-export const closeTemplate = async (): Promise<boolean> => {
-    const isClosed = await doc.Close();
-
-    if (isClosed) {
-        return true;
+    if (!isExported) {
+        await closeTemplate();
+        throw new Error(`Failed to export file to ${dest}.`);
     }
 
-    throw new Error("Failed to close template file.");
-};
-
-export const exportTemplate = async (
-    type:number,
-    destination:string,
-    resolution:number,
-): Promise<boolean> => {
-    const isComplete = await doc.Export(type, destination, resolution);
-    return isComplete;
+    return true;
 };
 
 export const populateObjectsInTemplate = async (data: Data): Promise<boolean> => {
