@@ -20,7 +20,7 @@ const data = {
 /* {autoCut: true, mirroring: true, specialTape:true} */
 const printTag = async () => {
     try {
-        const complete = await tag.print(data, { mirroring: true, autoCut: true });
+        const complete = await tag.print(data, { highResolution: true, autoCut:true });
         console.log({ complete });
     } catch (error) {
         console.log({ error });

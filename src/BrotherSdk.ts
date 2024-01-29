@@ -56,11 +56,14 @@ export default class BrotherSdk {
      * @param {Object} object
      * @param {String} object.templatePath
      * Specifies the path to the template file (supports various formats)
-     * - Local path: "c:/path/to/your/template.lbx"
-     * - UNC path: "\\server\share\template.lbx"
+     * - Win path: "C:\\\path\\\to\\\your\\\template.lbx"
+     * - Unix path: "/home/templates/template.lbx"
+     * - UNC path: "\\\server\share\template.lbx"
      * - Remote URL: "http://yourserver.com/templates/label.lbx"
      * @param {String} [object.exportDir = ""]
      * The path for exporting generated templates.
+     * - Win path: "C:\\\path\\\to\\\your\\\"
+     * - Unix path: "/home/templates/"
      */
     constructor({
         templatePath,
@@ -287,12 +290,12 @@ export default class BrotherSdk {
         const status = await exportTemplate(fileType, path, resolution);
         await closeTemplate();
 
-        if (status) {
-            return true;
+        if (!status) {
+            throw new Error(
+                "Export failed: Please check the export directory and filename.",
+            );
         }
 
-        throw new Error(
-            "Export failed: Please check the export directory and filename.",
-        );
+        return true;
     }
 }
