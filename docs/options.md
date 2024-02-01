@@ -22,6 +22,7 @@ Properties are applicable exclusively to models that support each respective fun
 | color | boolean | false |Print in color.|
 | mono | boolean | false |Print in monochrome.|
 | continue | boolean | false |Front margin not output.|
+| fitPage | boolean | false |Specify whether to adjust the size and position of objects in the template in accordance with layout changes resulting from media changes. If set to true, adjustments will be made; otherwise, if set to false or undefined, no adjustments will be applied..|
 
 ## Supported Export Extensions
 | **Description** | **Extension** |

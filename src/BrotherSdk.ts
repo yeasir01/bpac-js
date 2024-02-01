@@ -8,6 +8,7 @@ import {
     Data,
     PrintConfig,
     ImageOptions,
+    Constructor,
 } from "./types";
 import {
     openTemplate,
@@ -20,6 +21,7 @@ import {
     printOut,
     endPrint,
     exportTemplate,
+    setPrinter,
 } from "./adapter";
 
 export default class BrotherSdk {
@@ -27,7 +29,9 @@ export default class BrotherSdk {
 
     templatePath: string;
 
-    exportDir: string;
+    printer: undefined | string;
+
+    exportDir: undefined | string;
 
     // One mutation observer, regardless of instances.
     static #observer: MutationObserver | undefined;
@@ -64,16 +68,14 @@ export default class BrotherSdk {
      * The path for exporting generated templates.
      * - Win path: "C:\\\path\\\to\\\your\\\"
      * - Unix path: "/home/templates/"
+     * @param {String} [object.printer = undefined]
+     * The name of the printer used for printing. Specify the printer name, not the path.
+     * - Example: "Brother QL-820NWB"
      */
-    constructor({
-        templatePath,
-        exportDir,
-    }: {
-        templatePath: string;
-        exportDir?: string;
-    }) {
+    constructor({ templatePath, exportDir, printer }: Constructor) {
         this.templatePath = templatePath;
-        this.exportDir = exportDir || "";
+        this.exportDir = exportDir;
+        this.printer = printer;
         this.#ready = false;
         this.#initialize();
     }
@@ -86,12 +88,12 @@ export default class BrotherSdk {
             return;
         }
 
-        if (targetNode.classList.contains(className)) {
-            this.#ready = true;
+        if (BrotherSdk.#observer) {
             return;
         }
 
-        if (BrotherSdk.#observer) {
+        if (targetNode.classList.contains(className)) {
+            this.#ready = true;
             return;
         }
 
@@ -180,17 +182,27 @@ export default class BrotherSdk {
      * @param {boolean} [config.continue = false]
      * Combines with printing for the following DoPrint( ) so that it is a single print job.
      * As a result, when the next DoPrints are called up, the front margins are not output.
+     * @param {boolean} [config.fitPage = false]
+     * Specify whether to adjust the size and position of objects in the template in accordance
+     * with layout changes resulting from media changes. If set to true, adjustments
+     * will be made; otherwise, if set to false or undefined, no adjustments will be applied.
      */
     async print(data: Data, config?: PrintConfig): Promise<boolean> {
-        const { copies = 1, printName = "BPAC-Document", ...rest } = config || {};
-
-        const bitmaskNumber = getStartPrintOptions(rest);
+        const {
+            copies = 1,
+            printName = "BPAC-Document",
+            fitPage = false,
+            ...opts
+        } = config || {};
 
         await this.#isPrintReady();
 
+        const bitMask = getStartPrintOptions(opts);
+
         await openTemplate(this.templatePath);
+        await setPrinter(this.printer, fitPage);
         await populateObjectsInTemplate(data);
-        await startPrint(printName, bitmaskNumber);
+        await startPrint(printName, bitMask);
         await printOut(copies);
         await endPrint();
         await closeTemplate();

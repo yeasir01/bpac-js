@@ -19,7 +19,10 @@ const optionBitmaskMap: { [key in keyof StartPrintOptions]: number } = {
     continue: 0x40000000,
 };
 
-export const getAbsolutePath = (basePath: string, filePathOrFileName: string): string => {
+export const getAbsolutePath = (
+    basePath: string | undefined,
+    filePathOrFileName: string,
+): string => {
     // eslint-disable-next-line no-useless-escape
     const isPath = /^(.*[\\\/])([^\\\/]+)\.([^.]+)$/;
 

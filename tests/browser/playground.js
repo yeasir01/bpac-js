@@ -11,16 +11,18 @@ const tag = new BrotherSdk({
     exportDir: "C:/Users/YMH/Desktop/Exported Labels/",
 });
 
+
 const data = {
     title: "Test Label",
     date: new Date("1/1/23"),
     barcode: "074608352052",
     image: "C:/Users/YMH/Desktop/Storage Drive Files/Logos/Monogram/my-logo.png",
 };
-/* {autoCut: true, mirroring: true, specialTape:true} */
+
 const printTag = async () => {
     try {
-        const complete = await tag.print(data, { highResolution: true, autoCut:true });
+        //tag.printer = "Brother QL-820NWB";
+        const complete = await tag.print(data, { highSpeed: true, autoCut:true, fitPage: false });
         console.log({ complete });
     } catch (error) {
         console.log({ error });
