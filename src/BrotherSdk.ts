@@ -25,8 +25,6 @@ import {
 } from "./adapter";
 
 export default class BrotherSdk {
-    #ready: boolean;
-
     templatePath: string;
 
     printer: undefined | string;
@@ -34,38 +32,25 @@ export default class BrotherSdk {
     exportDir: undefined | string;
 
     // One mutation observer, regardless of instances.
-    static #observer: MutationObserver | undefined;
+    static #observer: MutationObserver | null = null;
+
+    static #ready: boolean = false;
 
     /**
-     * **Retrieve The List Of Installed Printers**
+     * **BPAC-JS Class Object**
      *
-     * asynchronously retrieves the list of installed printers compatible with the bpac SDK.
-     *
-     * @returns {Promise<string[]>}
-     * a promise that resolves to an array of installed printers
-     * compatible with the 'bpac' SDK.
-     * @throws {Error}
-     * will throw an err if the method fails.
-     *
-     */
-    static async getPrinterList(): Promise<string[]> {
-        const printers = await getPrinters();
-        return printers;
-    }
-
-    /**
-     * @constructor
-     * Constructs a new instance of the BrotherSdk class, used
-     * for interacting with Brother SDK functionality.
+     * Create a new instance of this class to interact with the Brother SDK
+     * in JavaScript. This object facilitates communication and integration
+     * with the SDK functionalities.
      * @param {Object} object
      * @param {String} object.templatePath
-     * Specifies the path to the template file (supports various formats)
+     * Specifies the path to the template file
      * - Win path: "C:\\\path\\\to\\\your\\\template.lbx"
      * - Unix path: "/home/templates/template.lbx"
      * - UNC path: "\\\server\share\template.lbx"
      * - Remote URL: "http://yourserver.com/templates/label.lbx"
      * @param {String} [object.exportDir = ""]
-     * The path for exporting generated templates.
+     * The path for exporting generated assets.
      * - Win path: "C:\\\path\\\to\\\your\\\"
      * - Unix path: "/home/templates/"
      * @param {String} [object.printer = undefined]
@@ -76,59 +61,7 @@ export default class BrotherSdk {
         this.templatePath = templatePath;
         this.exportDir = exportDir;
         this.printer = printer;
-        this.#ready = false;
-        this.#initialize();
-    }
-
-    #initialize() {
-        const targetNode = document.body;
-        const className = "bpac-extension-installed";
-
-        if (this.#ready) {
-            return;
-        }
-
-        if (BrotherSdk.#observer) {
-            return;
-        }
-
-        if (targetNode.classList.contains(className)) {
-            this.#ready = true;
-            return;
-        }
-
-        BrotherSdk.#observer = new MutationObserver(() => {
-            if (targetNode.classList.contains(className)) {
-                this.#ready = true;
-                BrotherSdk.#observer?.disconnect();
-                BrotherSdk.#observer = undefined;
-            }
-        });
-
-        BrotherSdk.#observer.observe(targetNode, {
-            attributes: true,
-            attributeFilter: ["class"],
-        });
-    }
-
-    async #isPrintReady(timeout: number = 3000): Promise<boolean> {
-        if (this.#ready) {
-            return true;
-        }
-
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this.#ready) {
-                    resolve(true);
-                } else {
-                    reject(
-                        new Error(
-                            "Cannot establish printer communication: b-PAC extension missing or inactive. Install/enable.",
-                        ),
-                    );
-                }
-            }, timeout);
-        });
+        BrotherSdk.#initialize();
     }
 
     /**
@@ -179,9 +112,6 @@ export default class BrotherSdk {
      * @param {boolean} [config.mono = false]
      * Monochrome printing is performed. Valid only with models supporting
      * the color printing function.
-     * @param {boolean} [config.continue = false]
-     * Combines with printing for the following DoPrint( ) so that it is a single print job.
-     * As a result, when the next DoPrints are called up, the front margins are not output.
      * @param {boolean} [config.fitPage = false]
      * Specify whether to adjust the size and position of objects in the template in accordance
      * with layout changes resulting from media changes. If set to true, adjustments
@@ -195,14 +125,14 @@ export default class BrotherSdk {
             ...opts
         } = config || {};
 
-        await this.#isPrintReady();
+        await BrotherSdk.printerIsReady();
 
-        const bitMask = getStartPrintOptions(opts);
+        const hexValue = getStartPrintOptions(opts);
 
         await openTemplate(this.templatePath);
         await setPrinter(this.printer, fitPage);
         await populateObjectsInTemplate(data);
-        await startPrint(printName, bitMask);
+        await startPrint(printName, hexValue);
         await printOut(copies);
         await endPrint();
         await closeTemplate();
@@ -236,7 +166,7 @@ export default class BrotherSdk {
         const height = options?.height || 0;
         const width = options?.width || 0;
 
-        await this.#isPrintReady();
+        await BrotherSdk.printerIsReady();
         await openTemplate(this.templatePath);
         await populateObjectsInTemplate(data);
         const base64Data = await imageData(width, height);
@@ -257,11 +187,11 @@ export default class BrotherSdk {
      *
      */
     async getPrinterName(): Promise<string> {
-        await this.#isPrintReady();
+        await BrotherSdk.printerIsReady();
         await openTemplate(this.templatePath);
-        const printer = getPrinterName();
+        const printerName = getPrinterName();
         await closeTemplate();
-        return printer;
+        return printerName;
     }
 
     /**
@@ -296,7 +226,7 @@ export default class BrotherSdk {
             filePathOrFileName,
         );
 
-        await this.#isPrintReady();
+        await BrotherSdk.printerIsReady();
         await openTemplate(this.templatePath);
         await populateObjectsInTemplate(data);
         const status = await exportTemplate(fileType, path, resolution);
@@ -309,5 +239,74 @@ export default class BrotherSdk {
         }
 
         return true;
+    }
+
+    static #initialize():void {
+        const targetNode = document.body;
+        const className = "bpac-extension-installed";
+
+        if (BrotherSdk.#ready) {
+            return;
+        }
+
+        if (BrotherSdk.#observer) {
+            return;
+        }
+
+        if (targetNode.classList.contains(className)) {
+            BrotherSdk.#ready = true;
+            return;
+        }
+
+        BrotherSdk.#observer = new MutationObserver(() => {
+            if (targetNode.classList.contains(className)) {
+                BrotherSdk.#ready = true;
+                BrotherSdk.#observer?.disconnect();
+                BrotherSdk.#observer = null;
+            }
+        });
+
+        BrotherSdk.#observer.observe(targetNode, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+    }
+
+    /**
+     * **Get List Of Installed Printers**
+     *
+     * asynchronously retrieves the list of installed printers compatible with the bpac SDK.
+     *
+     * @returns {Promise<string[]>}
+     * a promise that resolves to an array of installed printers
+     * compatible with the 'bpac' SDK.
+     * @throws {Error}
+     * will throw an err if the method fails.
+     *
+     */
+    static async getPrinterList(): Promise<string[]> {
+        await BrotherSdk.printerIsReady();
+        const printers = await getPrinters();
+        return printers;
+    }
+
+    static async printerIsReady(timeout: number = 3000): Promise<boolean> {
+        if (BrotherSdk.#ready) {
+            return true;
+        }
+
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (BrotherSdk.#ready) {
+                    resolve(true);
+                } else {
+                    reject(
+                        new Error(
+                            "Cannot establish printer communication: b-PAC extension missing or inactive. Install/enable.",
+                        ),
+                    );
+                }
+            }, timeout);
+        });
     }
 }

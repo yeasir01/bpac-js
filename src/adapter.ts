@@ -15,7 +15,7 @@ export const setPrinter = async (printer: string | undefined, fitPage: boolean):
     if (printer === undefined && fitPage === false) return;
 
     if (printer === undefined && fitPage === true) {
-        throw new Error("To use fitPage, you must manually set the printer name.");
+        throw new Error("To use fitPage, you must explicity set the printer name.");
     }
 
     const isPrinter:boolean = await Doc.SetPrinter(printer, fitPage);

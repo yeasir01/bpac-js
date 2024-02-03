@@ -6,7 +6,7 @@ Install package
 ```sh
 $ npm install bpac-js
 ```
-Import module - named and defaults ok.
+Import - named or defaults ok.
 
 ```javascript
 import BrotherBrotherSdk from "bpac-js";

@@ -29,11 +29,10 @@ export type StartPrintOptions = {
     highResolution?: boolean,
     color?: boolean,
     mono?: boolean,
-    continue?: boolean,
 };
 
 export type FitPage = {
-    fitPage: boolean;
+    fitPage?: boolean;
 };
 
 export type PrintConfig = PrintOptions & StartPrintOptions & FitPage;
