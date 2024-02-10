@@ -94,7 +94,7 @@ const data = {
     date: new Date("2024-1-20"),
 };
 
-// Docs >> Options >> Print Config Options - for all options
+// Docs >> Options >> Print Options - for all options
 const options = {
     copies: 1,
     printName: "Air Force Label",
@@ -158,7 +158,7 @@ previewBtn.addEventListener("click", previewImage);
 // script.js file
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
 
-const expBtn = document.getElementById("export-btn");
+const exp = document.getElementById("export-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
@@ -175,7 +175,7 @@ const data = {
 
 const exportFile = async () => {
     try {
-        // Docs >> Options >> Supported Export Extensions - for support file types
+        // Docs >> Options >> Supported Ext Types - for support file types
         const success = await tag.export(data, "Air-Force.bmp", 300);
         console.log({success}) // Output: {success: true}
     } catch (error) {
@@ -183,6 +183,6 @@ const exportFile = async () => {
     }
 };
 
-expBtn.addEventListener("click", exportFile);
+exp.addEventListener("click", exportFile);
 
 ```
