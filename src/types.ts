@@ -1,4 +1,4 @@
-export type Data = {
+export type TemplateData = {
     [key:string] : string | Date
 };
 

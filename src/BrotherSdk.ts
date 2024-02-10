@@ -5,7 +5,7 @@ import {
     getStartPrintOptions,
 } from "./helpers";
 import {
-    Data,
+    TemplateData,
     PrintConfig,
     ImageOptions,
     Constructor,
@@ -56,6 +56,9 @@ export default class BrotherSdk {
      * @param {String} [object.printer = undefined]
      * The name of the printer used for printing. Specify the printer name, not the path.
      * - Example: "Brother QL-820NWB"
+     * @example
+     * //use the static method getPrinterList() to obtain a list of installed printers.
+     * BrotherSdk.getPrinterList()
      */
     constructor({ templatePath, exportDir, printer }: Constructor) {
         this.templatePath = templatePath;
@@ -117,7 +120,7 @@ export default class BrotherSdk {
      * with layout changes resulting from media changes. If set to true, adjustments
      * will be made; otherwise, if set to false or undefined, no adjustments will be applied.
      */
-    async print(data: Data, config?: PrintConfig): Promise<boolean> {
+    async print(data: TemplateData, config?: PrintConfig): Promise<boolean> {
         const {
             copies = 1,
             printName = "BPAC-Document",
@@ -160,7 +163,7 @@ export default class BrotherSdk {
      * A promise that resolves to a Base64 encoded string representing the image data.
      */
     async getImageData(
-        data: Data,
+        data: TemplateData,
         options: ImageOptions,
     ): Promise<string> {
         const height = options?.height || 0;
@@ -182,8 +185,6 @@ export default class BrotherSdk {
      *
      * @returns {Promise<string>}
      * A promise that resolves with the name of the printer.
-     * @throws {Error}
-     * Fails to get the printer name.
      *
      */
     async getPrinterName(): Promise<string> {
@@ -214,10 +215,12 @@ export default class BrotherSdk {
      *  If a value of 0 is specified, the printer resolution is used.
      *
      *  The resolution param is only valid for .lbi and .bmp extensions.
-     * @throws {Error}
-     * Fails to export.
      */
-    async export(data: Data, filePathOrFileName: string, resolution: number = 0): Promise<boolean> {
+    async export(
+        data: TemplateData,
+        filePathOrFileName: string,
+        resolution: number = 0,
+    ): Promise<boolean> {
         const fileExt = getFileExtension(filePathOrFileName);
         const fileType = getExportType(fileExt);
 
@@ -229,14 +232,8 @@ export default class BrotherSdk {
         await BrotherSdk.printerIsReady();
         await openTemplate(this.templatePath);
         await populateObjectsInTemplate(data);
-        const status = await exportTemplate(fileType, path, resolution);
+        await exportTemplate(fileType, path, resolution);
         await closeTemplate();
-
-        if (!status) {
-            throw new Error(
-                "Export failed: Please check the export directory and filename.",
-            );
-        }
 
         return true;
     }
@@ -280,8 +277,6 @@ export default class BrotherSdk {
      * @returns {Promise<string[]>}
      * a promise that resolves to an array of installed printers
      * compatible with the 'bpac' SDK.
-     * @throws {Error}
-     * will throw an err if the method fails.
      *
      */
     static async getPrinterList(): Promise<string[]> {

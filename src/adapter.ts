@@ -1,5 +1,5 @@
 import * as bpac from "./vendor/bpac-v3.4";
-import { Data, ObjectTypes } from "./types";
+import { TemplateData, ObjectTypes } from "./types";
 
 const Doc = bpac.IDocument;
 
@@ -12,15 +12,15 @@ export const openTemplate = async (path: string): Promise<void> => {
 };
 
 export const setPrinter = async (printer: string | undefined, fitPage: boolean): Promise<void> => {
-    if (printer === undefined && fitPage === false) return;
+    if (printer === undefined && fitPage === false) { return; }
 
     if (printer === undefined && fitPage === true) {
         throw new Error("To use fitPage, you must explicity set the printer name.");
     }
 
-    const isPrinter:boolean = await Doc.SetPrinter(printer, fitPage);
+    const isPrinterSet:boolean = await Doc.SetPrinter(printer, fitPage);
 
-    if (!isPrinter) {
+    if (!isPrinterSet) {
         throw new Error(
             `Failed to set the printer. The specified printer "${printer}" may not exist or is not accessible.`,
         );
@@ -86,33 +86,30 @@ export const getPrinters = async (): Promise<string[]> => {
     return printers;
 };
 
-export const exportTemplate = async (type:number, dest:string, res:number): Promise<boolean> => {
+export const exportTemplate = async (type:number, dest:string, res:number): Promise<void> => {
     const isExported:boolean = await Doc.Export(type, dest, res);
 
     if (!isExported) {
         await closeTemplate();
         throw new Error(`Failed to export file to ${dest}.`);
     }
-
-    return true;
 };
 
-export const populateObjectsInTemplate = async (data: Data): Promise<boolean> => {
-    const keys: string[] = Object.keys(data);
-
+export const populateObjectsInTemplate = async (data: TemplateData): Promise<boolean> => {
     // eslint-disable-next-line no-restricted-syntax
-    for (const prop of keys) {
-        const value = data[prop];
-        const obj = await Doc.GetObject(prop);
+    for (const key of Object.keys(data)) {
+        const value = data[key];
+
+        const obj = await Doc.GetObject(key);
 
         if (!obj) {
             await closeTemplate();
             throw new Error(
-                `There is no object in the specified template with the name of "${prop}".`,
+                `There is no object in the specified template with the name of "${key}".`,
             );
         }
 
-        const type = await obj.Type;
+        const type:number = await obj.Type;
 
         switch (type) {
             case ObjectTypes.Text:
@@ -131,7 +128,7 @@ export const populateObjectsInTemplate = async (data: Data): Promise<boolean> =>
                 await obj.SetData(0, value, 0);
                 break;
             default:
-                throw new Error(`Unknown type for "${prop}" prop.`);
+                throw new Error(`Unknown type for "${key}" property.`);
         }
     }
 
