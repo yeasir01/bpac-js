@@ -1,5 +1,11 @@
 # bpac-js
 
+## 2.1.0
+
+### Minor Changes
+
+- b7b2085: Initial stable release
+
 ## 2.0.4
 
 ### Patch Changes
