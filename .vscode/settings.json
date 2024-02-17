@@ -13,5 +13,8 @@
     "files.eol": "\n",
     "[github-actions-workflow]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

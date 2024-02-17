@@ -6,7 +6,7 @@ Install package
 ```sh
 $ npm install bpac-js
 ```
-Import module - named and defaults ok.
+Import - named or defaults ok.
 
 ```javascript
 import BrotherBrotherSdk from "bpac-js";
@@ -16,7 +16,7 @@ import { BrotherBrotherSdk } from "bpac-js";
 ```
 
 ### CDN
-Include import at the top of your script file. And set type to module in .html (requires live-server or equivalent).
+Include import at the top of your script file, and set script type to module in .html (load using live-server or equivalent).
 
 ```javascript
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/index.js";
@@ -31,17 +31,16 @@ import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/ind
 ### Get Printer Name
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
-
 const getNameBtn = document.getElementById("get-name-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
     exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
+    printer: "Brother QL-820NWB"
 });
 
 // Returns the printer associated with the template in string format
-const getName = async () => {
+const getPrinter = async () => {
     try {
         const printer = await tag.getPrinterName();
         console.log({printer}) // Output: {printer: "Brother QL-820NWB"}
@@ -50,18 +49,16 @@ const getName = async () => {
     }
 };
 
-getNameBtn.addEventListener("click", getName);
+getNameBtn.addEventListener("click", getPrinter);
 
 ```
 
 ### Get List Of Printers
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
-
 const getNameBtn = document.getElementById("get-name-btn");
 
-const getNames = async () => {
+const getPrinters = async () => {
     try {
         const printers = await BrotherSdk.getPrinterList();
         console.log({printers}) // Output: {printers: ["Brother QL-820NWB", "Brother PT-9800PCN"]}
@@ -70,20 +67,19 @@ const getNames = async () => {
     }
 };
 
-getNameBtn.addEventListener("click", getNames);
+getNameBtn.addEventListener("click", getPrinters);
 
 ```
 
 ### Print
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
-
 const printBtn = document.getElementById("print-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
     exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
+    printer: "Brother QL-820NWB"
 });
 
 // The keys and values must match the objects/types in the template file.
@@ -94,14 +90,14 @@ const data = {
     date: new Date("2024-1-20"),
 };
 
-// Docs >> Options >> Print Config Options - for all options
+// Docs >> Options >> Print Options - for all options
 const options = {
     copies: 1,
     printName: "Air Force Label",
     highResolution: true
 }
 
-const sendToPrinter = async () => {
+const handlePrint = async () => {
     try {
         const isPrinted = await tag.print(data, options);
         console.log({isPrinted})
@@ -110,21 +106,20 @@ const sendToPrinter = async () => {
     }
 };
 
-printBtn.addEventListener("click", sendToPrinter);
+printBtn.addEventListener("click", handlePrint);
 
 ```
 
 ### Preview
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
-
 const previewBtn = document.getElementById("preview-btn");
 const imgOutput = document.getElementById("img")
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
     exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
+    printer: "Brother QL-820NWB"
 });
 
 // The keys and values must match the objects/types in the template file.
@@ -140,7 +135,7 @@ const options = {
     height: 0 // Optional - Defaults to 0
 }
 
-const previewImage = async () => {
+const handlePreview = async () => {
     try {
         const data = await tag.getImageData(data, options); //image data
         imgOutput.src = data;
@@ -149,20 +144,19 @@ const previewImage = async () => {
     }
 };
 
-previewBtn.addEventListener("click", previewImage);
+previewBtn.addEventListener("click", handlePreview);
 
 ```
 
 ### Export
 ```javascript
 // script.js file
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.mjs";
-
-const expBtn = document.getElementById("export-btn");
+const exp = document.getElementById("export-btn");
 
 const tag = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
     exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
+    printer: "Brother QL-820NWB"
 });
 
 // The keys and values must match the objects/types in the template file.
@@ -173,9 +167,9 @@ const data = {
     date: new Date("2024-1-20"),
 };
 
-const exportFile = async () => {
+const handleExport = async () => {
     try {
-        // Docs >> Options >> Supported Export Extensions - for support file types
+        // Docs >> Options >> Supported Ext Types - for support file types
         const success = await tag.export(data, "Air-Force.bmp", 300);
         console.log({success}) // Output: {success: true}
     } catch (error) {
@@ -183,6 +177,6 @@ const exportFile = async () => {
     }
 };
 
-expBtn.addEventListener("click", exportFile);
+exp.addEventListener("click", handleExport);
 
 ```

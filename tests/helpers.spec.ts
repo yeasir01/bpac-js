@@ -53,6 +53,10 @@ describe("Helpers", () => {
             expect(() => getAbsolutePath()).to.throw(Error);
         });
 
+        it("Should throw an error when only one arg is passed.", () => {
+            expect(() => getAbsolutePath(undefined, dir.fileName)).to.throw(Error);
+        });
+
         it("Should combine path and filename (backslashes).", () => {
             const result = getAbsolutePath(dir.winBase, dir.fileName);
             expect(result).to.have.string("C:\\Templates\\label.lbx");

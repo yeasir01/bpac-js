@@ -1,4 +1,12 @@
-export type Data = Record<string, string | Date>;
+export type TemplateData = {
+    [key:string] : string | Date
+};
+
+export type Constructor = {
+    templatePath: string;
+    exportDir?: string;
+    printer?: string;
+};
 
 export type PrintOptions = {
     copies?: number;
@@ -21,10 +29,13 @@ export type StartPrintOptions = {
     highResolution?: boolean,
     color?: boolean,
     mono?: boolean,
-    continue?: boolean,
 };
 
-export type PrintConfig = PrintOptions & StartPrintOptions;
+export type FitPage = {
+    fitPage?: boolean;
+};
+
+export type PrintConfig = PrintOptions & StartPrintOptions & FitPage;
 
 export type ImageOptions = {
     width?: number;

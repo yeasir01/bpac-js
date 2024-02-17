@@ -1,6 +1,6 @@
 import { StartPrintOptions } from "./types";
 
-const optionBitmaskMap: { [key in keyof StartPrintOptions]: number } = {
+const optionToHexMap: { [key:string]: number } = {
     autoCut: 0x1,
     cutPause: 0x1,
     cutMark: 0x2,
@@ -16,10 +16,12 @@ const optionBitmaskMap: { [key in keyof StartPrintOptions]: number } = {
     highResolution: 0x02000000,
     color: 0x8,
     mono: 0x10000000,
-    continue: 0x40000000,
 };
 
-export const getAbsolutePath = (basePath: string, filePathOrFileName: string): string => {
+export const getAbsolutePath = (
+    basePath: string | undefined,
+    filePathOrFileName: string,
+): string => {
     // eslint-disable-next-line no-useless-escape
     const isPath = /^(.*[\\\/])([^\\\/]+)\.([^.]+)$/;
 
@@ -51,22 +53,20 @@ export const getExportType = (fileExt:string) => {
 };
 
 export const getStartPrintOptions = (options: StartPrintOptions): number => {
-    const combinedBitmask: number[] = [];
+    const combinedHexArray: number[] = [];
 
-    Object.entries(options).forEach(([key, value]) => {
-        const k = key as keyof StartPrintOptions;
+    Object.entries(options).forEach(([key, value]): void => {
+        if (value === true && optionToHexMap[key] !== undefined) {
+            const hexadecimal = optionToHexMap[key];
 
-        if (value === true && optionBitmaskMap[k] !== undefined) {
-            const bitmaskValue: number | undefined = optionBitmaskMap[k];
-
-            if (bitmaskValue !== undefined) {
-                combinedBitmask.push(bitmaskValue);
+            if (hexadecimal !== undefined) {
+                combinedHexArray.push(hexadecimal);
             }
         }
     });
 
     // eslint-disable-next-line no-bitwise
-    return combinedBitmask.reduce((acc, val) => acc | val, 0x0);
+    return combinedHexArray.reduce((acc, val) => acc | val, 0x0);
 };
 
 export const getFileExtension = (filePathOrFileName:string): string => {
