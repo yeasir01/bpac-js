@@ -6,10 +6,8 @@
     ],
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": false,
-    "liveServer.settings.file": "./tests/browser/index.html",
-    "liveServer.settings.mount": [
-        ["/", "./tests/browser/"]
-    ],
+    "liveServer.settings.root": "/tests/browser",
+    "liveServer.settings.mount": [["/", "./dist"]],
     "files.eol": "\n",
     "[github-actions-workflow]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
