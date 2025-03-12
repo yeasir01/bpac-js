@@ -122,7 +122,8 @@ export const populateObjectsInTemplate = async (data: TemplateData): Promise<boo
                 await obj.SetData(0, value);
                 break;
             case ObjectTypes.Barcode:
-                await Doc.SetBarcodeData(0, value);
+                //await Doc.SetBarcodeData(0, value); //For some reason this does not work for all barcode's.
+                obj.Text = value;
                 break;
             case ObjectTypes.ClipArt:
                 await obj.SetData(0, value, 0);
