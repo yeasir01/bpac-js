@@ -1,5 +1,5 @@
-//import BrotherSdK from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
-import { BrotherSdk } from "../../dist/index.js";
+// import { BrotherSdk } from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+import { BrotherSdk } from "./index.js" //Available through Live Server Mount (Dev Env)
 
 const printBtn = document.getElementById("print-btn");
 const previewBtn = document.getElementById("preview-btn");
@@ -18,28 +18,29 @@ const tag = new BrotherSdk({
 const data = {
     title: "Test Label",
     date: new Date("1/1/23"),
-    barcode: "074608352052",
-    image: "C:/Users/YMH/Desktop/Storage Drive Files/Logos/Monogram/my-logo.png",
+    barcode: "096619756803",
+    image: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png",
+    qrCode: "https://google.com"
 };
 
 const dataOne = {
     title: "Test Label One",
     date: new Date("1/1/23"),
-    barcode: "074608352052",
-    image: "C:/Users/YMH/Desktop/Storage Drive Files/Logos/Monogram/my-logo.png",
+    barcode: "096619756803",
+    image: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png",
 };
 
 const dataTwo = {
     title: "Test Label Two",
     date: new Date("1/1/24"),
-    barcode: "074608352052",
-    image: "C:/Users/YMH/Desktop/Storage Drive Files/Logos/Monogram/my-logo.png",
+    barcode: "096619756803",
+    image: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png",
 };
 
 const printTag = async () => {
     try {
-        for (const record of [dataOne/* , dataTwo */]){
-            await tag.print(record, {copies: 2, cutAtEnd: true});
+        for (const record of [dataOne, dataTwo]){
+            await tag.print(record, {copies: 1, cutAtEnd: true});
         }
     } catch (error) {
         console.log({ error });
@@ -48,7 +49,7 @@ const printTag = async () => {
 
 const previewTag = async () => {
     try {
-        const imgData = await tag.getImageData(data, { height: 120 });
+        const imgData = await tag.getImageData(data, { height: 320 });
         preview.src = imgData;
     } catch (error) {
         console.log({ error });
