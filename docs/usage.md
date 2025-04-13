@@ -6,7 +6,7 @@ Install package
 ```sh
 $ npm install bpac-js
 ```
-Import - named or defaults ok.
+Either named or default imports ok.
 
 ```javascript
 import BrotherBrotherSdk from "bpac-js";
@@ -16,7 +16,7 @@ import { BrotherBrotherSdk } from "bpac-js";
 ```
 
 ### CDN
-Include import at the top of your script file, and set script type to module in .html (load using live-server or equivalent).
+Include import at the top of your "script.js" file, and set script type to module in "index.html".  Use live-server or equivalent for development.
 
 ```javascript
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/index.js";
@@ -31,32 +31,33 @@ import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/ind
 ### Get Printer Name
 ```javascript
 // script.js file
-const getNameBtn = document.getElementById("get-name-btn");
 
-const tag = new BrotherSdk({
-    templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
-    printer: "Brother QL-820NWB"
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
+
+const label = new BrotherSdk({
+    templatePath: "C:\\Templates\\shoe-template.lbx"
 });
 
-// Returns the printer associated with the template in string format
 const getPrinter = async () => {
     try {
-        const printer = await tag.getPrinterName();
+        const printer = await label.getPrinterName();
         console.log({printer}) // Output: {printer: "Brother QL-820NWB"}
     } catch (error) {
         console.log({error})
     }
 };
 
-getNameBtn.addEventListener("click", getPrinter);
+btn.addEventListener("click", getPrinter);
 
 ```
 
 ### Get List Of Printers
 ```javascript
 // script.js file
-const getNameBtn = document.getElementById("get-name-btn");
+
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
 
 const getPrinters = async () => {
     try {
@@ -67,116 +68,161 @@ const getPrinters = async () => {
     }
 };
 
-getNameBtn.addEventListener("click", getPrinters);
+btn.addEventListener("click", getPrinters);
 
 ```
 
-### Print
+### Print One Label
 ```javascript
 // script.js file
-const printBtn = document.getElementById("print-btn");
 
-const tag = new BrotherSdk({
-    templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
-    printer: "Brother QL-820NWB"
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
+
+const label = new BrotherSdk({ 
+    templatePath: "C:\\Templates\\shoe-template.lbx"
 });
 
-// The keys and values must match the objects/types in the template file.
-const data = {
-    title: "Air Force 1",
+// Important: The keys and values must match the object name & type in the template file.
+const dataObject = {
+    title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
-// Docs >> Options >> Print Options - for all options
+// All Options: Docs >> Options >> Print Options
 const options = {
-    copies: 1,
+    copies: 3,
     printName: "Air Force Label",
     highResolution: true
 }
 
 const handlePrint = async () => {
     try {
-        const isPrinted = await tag.print(data, options);
-        console.log({isPrinted})
+        const isPrinted = await label.print(dataObject, options);
+        console.log({isPrinted}) // Output: {isPrinted: true}
     } catch (error) {
         console.log({error})
     }
 };
 
-printBtn.addEventListener("click", handlePrint);
+btn.addEventListener("click", handlePrint);
+
+```
+
+### Print Many Labels
+```javascript
+// script.js file
+
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
+
+const label = new BrotherSdk({ 
+    templatePath: "C:\\Templates\\shoe-template.lbx"
+});
+
+// Important: The keys and values must match the object name & type in the template file.
+const dataArray = [{
+    title: "Air Force One",
+    price: "$149.99",
+    barcode: "091207567724",
+    date: new Date("2024-1-20"),
+},
+{
+    title: "Air Force One",
+    price: "$149.99",
+    barcode: "091207567724",
+    date: new Date("2024-1-20"),
+}];
+
+// All Options: Docs >> Options >> Print Options
+const options = {
+    highResolution: true
+}
+
+const handlePrint = async () => {
+    try {
+        const isPrinted = await label.print(dataArray, options);
+        console.log({isPrinted}) // Output: {isPrinted: true}
+    } catch (error) {
+        console.log({error})
+    }
+};
+
+btn.addEventListener("click", handlePrint);
 
 ```
 
 ### Preview
 ```javascript
 // script.js file
-const previewBtn = document.getElementById("preview-btn");
-const imgOutput = document.getElementById("img")
 
-const tag = new BrotherSdk({
-    templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
-    printer: "Brother QL-820NWB"
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
+const imgElement = document.getElementById("img");
+
+const label = new BrotherSdk({
+    templatePath: "C:\\Templates\\shoe-template.lbx"
 });
 
-// The keys and values must match the objects/types in the template file.
+// Important: The keys and values must match the object name & type in the template file.
 const data = {
-    title: "Air Force 1",
+    title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
 const options = {
-    width: 100, // Optional - Defaults to 0
-    height: 0 // Optional - Defaults to 0
+    height: 300
 }
 
 const handlePreview = async () => {
     try {
-        const data = await tag.getImageData(data, options); //image data
-        imgOutput.src = data;
+        const base64EncodedPNG = await label.getImageData(data, options);
+        imgElement.src = base64EncodedPNG;
     } catch (error) {
         console.log({error})
     }
 };
 
-previewBtn.addEventListener("click", handlePreview);
+btn.addEventListener("click", handlePreview);
 
 ```
 
 ### Export
 ```javascript
 // script.js file
-const exp = document.getElementById("export-btn");
 
-const tag = new BrotherSdk({
-    templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported_Labels/",
-    printer: "Brother QL-820NWB"
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+const btn = document.getElementById("btn");
+
+const label = new BrotherSdk({
+    templatePath: "C:\\Templates\\shoe-template.lbx",
+    exportPath: "C:\\Users\\YourProfile\\Desktop\\Exported_Labels\\"
 });
 
 // The keys and values must match the objects/types in the template file.
 const data = {
-    title: "Air Force 1",
+    title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
+const newFileName = "shoe-label-img.bmp";
+
 const handleExport = async () => {
     try {
-        // Docs >> Options >> Supported Ext Types - for support file types
-        const success = await tag.export(data, "Air-Force.bmp", 300);
+        // All Options: Docs >> Options >> Supported Ext Types
+        const success = await label.export(data, newFileName, 300);
         console.log({success}) // Output: {success: true}
     } catch (error) {
         console.log({error})
     }
 };
 
-exp.addEventListener("click", handleExport);
+btn.addEventListener("click", handleExport);
 
 ```

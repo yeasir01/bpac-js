@@ -16,7 +16,7 @@
 
 ## Overview
 
-The Brother bPac printer SDK for Web Browsers simplifies the integration of the b-PAC SDK, providing a user-friendly interface for common tasks such as printing and obtaining image data. This SDK aims to enhance accessibility through modern JavaScript practices and thorough documentation, making it a valuable tool for developers working on web-based printing solutions
+The Brother bPac printer SDK for Web Browsers simplifies the integration of the b-PAC SDK, providing a user-friendly interface for common tasks such as printing and obtaining image data. This project aims to enhance accessibility through modern JavaScript practices and thorough documentation, making it a valuable tool for developers working on web-based printing solutions
 
 ## Features
 
@@ -31,15 +31,19 @@ The Brother bPac printer SDK for Web Browsers simplifies the integration of the 
 Before using the Brother Printer SDK for Web Browsers, ensure you meet the following prerequisites:
 
 1. **Supported Printer Model:**
-   - Check the list of supported printer models [here](https://www.brother.co.jp/eng/dev/bpac/environment/index.aspx#model). Ensure that your Brother printer is on the list for compatibility with this SDK. check src folder to identify current bpac version (example: bpac-v3.4.js).
+   - Check the list of supported printer models [here](https://www.brother.co.jp/eng/dev/bpac/environment/index.aspx#model). Ensure that your Brother printer is on the list for compatibility with this SDK. check src/vendor folder to identify current bpac version (example: bpac-v3.4.js).
 
 2. **Driver Installation:**
    - Install the appropriate printer driver for your Brother printer on your system. Visit the [Brother Solutions Center](https://support.brother.com/g/s/es/dev/en/bpac/download/index.html?c=eu_ot&lang=en&navi=offall&comple=on&redirect=on#client) to download and follow the installation instructions provided by Brother.
 
 3. **Template Printing Setup:**
-   - Ensure that you can successfully print directly from the template file. This may involve configuring your printer settings.
+   - Ensure that you can successfully print directly from the template file. This may involve configuring your printer settings and your template file.
 
-4. **Brother b-PAC Extension:**
+4. **b-PAC Client Component:**
+   - Before using the Brother Printer SDK for Web Browsers, you will also need to install the BPac Client. This client is essential for enabling communication between your browser and the Brother printer.
+   - Download and install the BPac Client from the following link: [BPac Client](https://support.brother.com/g/s/es/dev/en/bpac/download/index.html?c=eu_ot&lang=en&navi=offall&comple=on&redirect=on#client)
+
+5. **Brother b-PAC Extension:**
    - Install the Brother b-Pac extension for your web browser from the respective extension store. Ensure that the extension is activated and running.
 
     **Extension Links:**
@@ -62,11 +66,11 @@ Content Delivery Network - Latest
 ```link
 https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js
 ```
-Note: While using the `latest` tag is convenient, it is recommended to exercise caution, especially in production environments. The latest tag always points to the most recent version, which may include breaking changes. To ensure stability, consider specifying a specific version.
+The `latest` flag retrieves the most recent package version, potentially including breaking changes. In production environments, it is strongly recommended to use explicit version numbers to maintain predictable builds.
 
 ### 2. Explore Documentation:
 
-Visit the docs section in this repository to explore detailed guides and examples for utilizing the SDK functionalities.
+Visit the docs section in this repository to explore detailed guides and examples.
 
 ### 3. Contribute:
 
@@ -76,11 +80,11 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 
 ```javascript
 // Script File
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.0.3/dist/index.js";
+import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 
-const tag = new BrotherSdk({
+const shoeLabel = new BrotherSdk({
     templatePath: "C:/Templates/shoe-template.lbx",
     exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
 });
@@ -95,13 +99,13 @@ const data = {
 
 const options = {
     copies: 1, // Optional - Defaults: 1
-    printName: "Air Force Label", // Optional - Defaults: BPAC-Document
+    printName: "Air Force One Label", // Optional - Defaults: BPAC-Document
     highResolution: true // Optional
 }
 
 const sendToPrinter = async () => {
     try {
-        const isPrinted = await tag.print(data, options);
+        const isPrinted = await shoeLabel.print(data, options);
         console.log({isPrinted})
     } catch (error) {
         console.log({error})

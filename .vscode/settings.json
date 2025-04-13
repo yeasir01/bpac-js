@@ -6,13 +6,18 @@
     ],
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": false,
-    "liveServer.settings.root": "/tests/browser",
-    "liveServer.settings.mount": [["/", "./dist"]],
+    "liveServer.settings.root": "./test/browser",
+    "liveServer.settings.mount": [
+        ["/", "./dist"]
+    ],
     "files.eol": "\n",
     "[github-actions-workflow]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[markdown]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     }
 }
