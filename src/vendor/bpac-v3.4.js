@@ -15,7 +15,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.attribute);
@@ -31,7 +31,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.data);
@@ -46,7 +46,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -59,7 +59,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.effect);
                 };
                 document.addEventListener(i, u);
@@ -72,7 +72,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -85,7 +85,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.point);
                 };
                 document.addEventListener(i, u);
@@ -99,7 +99,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -112,7 +112,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -124,7 +124,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -136,7 +136,7 @@ export class IObject {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -148,7 +148,7 @@ export class IObject {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -163,7 +163,7 @@ export class IObject {
             h = new Promise((n, i) => {
                 const r = (u) => {
                     document.removeEventListener(f, r),
-                    u.detail.connect == !1 ? i(t) : n(u.detail.ret);
+                    u.detail.connect == !1 ? i(new Error(t)) : n(u.detail.ret);
                 };
                 document.addEventListener(f, r);
             });
@@ -175,7 +175,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -187,7 +187,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -199,7 +199,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -211,7 +211,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -223,7 +223,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -235,7 +235,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -247,7 +247,7 @@ export class IObject {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -259,7 +259,7 @@ export class IObject {
             s = new Promise((n, i) => {
                 const r = (u) => {
                     document.removeEventListener(e, r),
-                    u.detail.connect == !1 ? i(t) : n(u.detail.ret);
+                    u.detail.connect == !1 ? i(new Error(t)) : n(u.detail.ret);
                 };
                 document.addEventListener(e, r);
             });
@@ -271,7 +271,7 @@ export class IObject {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -284,7 +284,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.height);
                 };
                 document.addEventListener(i, u);
@@ -302,7 +302,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.align);
                 };
                 document.addEventListener(i, u);
@@ -324,7 +324,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -342,7 +342,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.orientation);
                 };
                 document.addEventListener(i, u);
@@ -364,7 +364,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.selection);
                 };
                 document.addEventListener(i, u);
@@ -386,7 +386,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.selection);
                 };
                 document.addEventListener(i, u);
@@ -408,7 +408,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.text);
                 };
                 document.addEventListener(i, u);
@@ -426,7 +426,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.type);
                 };
                 document.addEventListener(i, u);
@@ -440,7 +440,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.align);
                 };
                 document.addEventListener(i, u);
@@ -458,7 +458,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.width);
                 };
                 document.addEventListener(i, u);
@@ -476,7 +476,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.X);
                 };
                 document.addEventListener(i, u);
@@ -494,7 +494,7 @@ export class IObject {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.Y);
                 };
                 document.addEventListener(i, u);
@@ -537,7 +537,7 @@ export class IObjects {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.count);
                 };
                 document.addEventListener(i, u);
@@ -551,7 +551,7 @@ export class IObjects {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.index);
@@ -567,7 +567,7 @@ export class IObjects {
                 const r = (f) => {
                     document.removeEventListener(u, r),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.index);
@@ -612,7 +612,7 @@ export class IObjects {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -633,7 +633,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.printers);
                 };
                 document.addEventListener(i, u);
@@ -647,7 +647,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.id);
                 };
                 document.addEventListener(i, u);
@@ -661,7 +661,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -675,7 +675,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.length);
                 };
                 document.addEventListener(i, u);
@@ -689,7 +689,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.mediaIds);
                 };
                 document.addEventListener(i, u);
@@ -703,7 +703,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.mediaNames);
                 };
                 document.addEventListener(i, u);
@@ -716,7 +716,7 @@ export class IPrinter {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -728,7 +728,7 @@ export class IPrinter {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -740,7 +740,7 @@ export class IPrinter {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -752,7 +752,7 @@ export class IPrinter {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -765,7 +765,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.errorCode);
                 };
                 document.addEventListener(i, u);
@@ -779,7 +779,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.errorString);
                 };
                 document.addEventListener(i, u);
@@ -793,7 +793,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -807,7 +807,7 @@ export class IPrinter {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.port);
                 };
                 document.addEventListener(i, u);
@@ -882,7 +882,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -894,7 +894,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -906,7 +906,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -918,7 +918,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -930,7 +930,7 @@ export class IDocument {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -971,7 +971,7 @@ export class IDocument {
                 const r = (f) => {
                     document.removeEventListener(u, r),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !0
                             ? n(f.detail.index)
                             : n();
@@ -1026,7 +1026,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.index);
@@ -1042,7 +1042,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.id);
                 };
                 document.addEventListener(i, u);
@@ -1056,7 +1056,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -1070,7 +1070,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -1084,7 +1084,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : n(f.detail.text);
                 };
                 document.addEventListener(r, u);
@@ -1098,7 +1098,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.count);
                 };
                 document.addEventListener(i, u);
@@ -1112,7 +1112,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.index);
@@ -1146,7 +1146,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1158,7 +1158,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1170,7 +1170,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1182,7 +1182,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1194,7 +1194,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1206,7 +1206,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1219,7 +1219,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.name);
                 };
                 document.addEventListener(i, u);
@@ -1232,7 +1232,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -1245,7 +1245,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.count);
                 };
                 document.addEventListener(i, u);
@@ -1259,7 +1259,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : f.detail.ret == !1
                             ? n()
                             : n(f.detail.cutlines);
@@ -1275,7 +1275,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.errorCode);
                 };
                 document.addEventListener(i, u);
@@ -1289,7 +1289,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.margin);
                 };
                 document.addEventListener(i, u);
@@ -1302,7 +1302,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -1315,7 +1315,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.margin);
                 };
                 document.addEventListener(i, u);
@@ -1328,7 +1328,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -1341,7 +1341,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.margin);
                 };
                 document.addEventListener(i, u);
@@ -1354,7 +1354,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -1367,7 +1367,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.margin);
                 };
                 document.addEventListener(i, u);
@@ -1381,7 +1381,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(r, u),
                     f.detail.connect == !1 || f.detail.connect == !1
-                        ? i(t)
+                        ? i(new Error(t))
                         : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
@@ -1395,7 +1395,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.orientation);
                 };
                 document.addEventListener(i, u);
@@ -1409,7 +1409,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.names);
                 };
                 document.addEventListener(i, u);
@@ -1423,7 +1423,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.width);
                 };
                 document.addEventListener(i, u);
@@ -1437,7 +1437,7 @@ export class IDocument {
                 const u = (f) => {
                     document.removeEventListener(i, u),
                     f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
+                        ? r(new Error(t))
                         : n(f.detail.length);
                 };
                 document.addEventListener(i, u);
@@ -1450,7 +1450,7 @@ export class IDocument {
             f = new Promise((n, i) => {
                 const u = (f) => {
                     document.removeEventListener(r, u),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(r, u);
             });
@@ -1462,7 +1462,7 @@ export class IDocument {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
@@ -1474,7 +1474,7 @@ export class IDocument {
             e = new Promise((n, i) => {
                 const r = (f) => {
                     document.removeEventListener(u, r),
-                    f.detail.connect == !1 ? i(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? i(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(u, r);
             });
@@ -1486,7 +1486,7 @@ export class IDocument {
             o = new Promise((n, i) => {
                 const r = (u) => {
                     document.removeEventListener(f, r),
-                    u.detail.connect == !1 ? i(t) : n(u.detail.ret);
+                    u.detail.connect == !1 ? i(new Error(t)) : n(u.detail.ret);
                 };
                 document.addEventListener(f, r);
             });
@@ -1498,7 +1498,7 @@ export class IDocument {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.connect == !1 ? r(t) : n(f.detail.ret);
+                    f.detail.connect == !1 ? r(new Error(t)) : n(f.detail.ret);
                 };
                 document.addEventListener(i, u);
             });
