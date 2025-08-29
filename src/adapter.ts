@@ -1,5 +1,5 @@
 import * as bpac from "./vendor/bpac-v3.4.js";
-import { TemplateData, ObjectTypes, PrinterStatus, ExportType } from "./types.ts";
+import { TemplateData, ObjectTypes, PrinterStatus, ExportType, PrintConfig } from "./types.ts";
 
 const Doc = bpac.IDocument;
 
@@ -298,7 +298,9 @@ export const exportDocument = async (type: ExportType, filePath: string, dpi: nu
 };
 
 // Optimized 03/15/25
-export const populateObjectsInTemplate = async (data: TemplateData): Promise<void> => {
+export const populateObjectsInTemplate = async (data: TemplateData, options?: Pick<PrintConfig, "skipNoPresentKeys">): Promise<void> => {
+    const { skipNoPresentKeys = false } = options || {};
+
     for (const key of Object.keys(data)) {
         const value = data[key];
 
@@ -306,8 +308,11 @@ export const populateObjectsInTemplate = async (data: TemplateData): Promise<voi
             const obj = await Doc.GetObject(key);
 
             if (!obj) {
-                await closeTemplate();
-                throw new Error(`Object "${key}" not found in the template.`);
+                if (!skipNoPresentKeys) {
+                    await closeTemplate();
+                    throw new Error(`Object "${key}" not found in the template.`);
+                }
+                continue;
             }
 
             const type: number = await obj.Type;

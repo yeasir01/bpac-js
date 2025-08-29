@@ -181,6 +181,7 @@ export default class BrotherSdk {
             copies = 1,
             printName = "BPAC-Document",
             fitPage = false,
+            skipNoPresentKeys = false,
             ...opts
         } = config || {};
 
@@ -194,7 +195,7 @@ export default class BrotherSdk {
         await setPrinter(this.printer, fitPage);
 
         for (const item of dataArray) {
-            await populateObjectsInTemplate(item);
+            await populateObjectsInTemplate(item, { skipNoPresentKeys });
             await startPrint(printName, bitwiseOpts);
             await printOut(copies);
         }

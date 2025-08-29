@@ -11,6 +11,11 @@ export type Constructor = {
 export type PrintOptions = {
     copies?: number;
     printName?: string;
+    /**
+     * If true, the print will not fail if a key is not present in the template.
+     * @default false
+     */
+    skipNoPresentKeys?: boolean;
 };
 
 export enum PrintOptionFlag {
