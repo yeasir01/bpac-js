@@ -2,6 +2,7 @@
 import { BrotherSdk } from "./index.js";
 
 const printBtn = document.getElementById("print-btn");
+const printBtnIgnoreMissingKeys = document.getElementById("print-btn-ignore-missing-keys");
 const previewBtn = document.getElementById("preview-btn");
 const exportBtn = document.getElementById("export-btn");
 const getPrintersBtn = document.getElementById("get-printers-btn");
@@ -24,6 +25,16 @@ const data = {
     imageTwo: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png"
 };
 
+const dataIgnoreMissingKeys = {
+    title: "Adams Cool Label",
+    date: "03/17/2025",
+    barcode: "051000012517",
+    image: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png",
+    qrCode: "https://www.google.com", 
+    imageTwo: "C:/Users/YMH/Desktop/Storage/Logos/Monogram/my-logo.png",
+    notPresent: "Not Present", // this key is not present in the template, should not throw an error with ignoreMissingKeys = true
+};
+
 const dataOne = {
     title: "Test Label One",
     date: new Date("1/1/23"),
@@ -44,6 +55,15 @@ const printTag = async () => {
     try {
         ///await tag.print([data, dataOne, dataTwo], { highSpeed: true}); //Printing multiple labels
         await tag.print(data, { highSpeed: true}); //Printing a single label
+    } catch (error) {
+        console.log({ error });
+    }
+};
+
+const printTagIgnoreMissingKeys = async () => {
+    try {
+        // await tag.print(dataIgnoreMissingKeys); // should throw an error
+        await tag.print(dataIgnoreMissingKeys, { ignoreMissingKeys: true });
     } catch (error) {
         console.log({ error });
     }
@@ -81,6 +101,7 @@ const getPrinters = async () => {
 };
 
 printBtn.addEventListener("click", printTag);
+printBtnIgnoreMissingKeys.addEventListener("click", printTagIgnoreMissingKeys);
 previewBtn.addEventListener("click", previewTag);
 exportBtn.addEventListener("click", exportTag);
 getPrintersBtn.addEventListener("click", getPrinters);

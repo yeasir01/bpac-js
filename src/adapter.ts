@@ -298,8 +298,8 @@ export const exportDocument = async (type: ExportType, filePath: string, dpi: nu
 };
 
 // Optimized 03/15/25
-export const populateObjectsInTemplate = async (data: TemplateData, options?: Pick<PrintConfig, "skipNoPresentKeys">): Promise<void> => {
-    const { skipNoPresentKeys = false } = options || {};
+export const populateObjectsInTemplate = async (data: TemplateData, options?: Pick<PrintConfig, "ignoreMissingKeys">): Promise<void> => {
+    const { ignoreMissingKeys = false } = options || {};
 
     for (const key of Object.keys(data)) {
         const value = data[key];
@@ -308,7 +308,7 @@ export const populateObjectsInTemplate = async (data: TemplateData, options?: Pi
             const obj = await Doc.GetObject(key);
 
             if (!obj) {
-                if (!skipNoPresentKeys) {
+                if (!ignoreMissingKeys) {
                     await closeTemplate();
                     throw new Error(`Object "${key}" not found in the template.`);
                 }
