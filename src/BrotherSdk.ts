@@ -10,6 +10,7 @@ import {
     ImageOptions,
     Constructor,
     PrinterStatus,
+    IgnoreMissingKeys,
 } from "./types";
 import {
     openTemplate,
@@ -225,13 +226,13 @@ export default class BrotherSdk {
      * @returns {Promise<string>}
      * A promise that resolves to a Base64 encoded string representing the image data.
      */
-    async getImageData(data: TemplateData, options: ImageOptions): Promise<string> {
+    async getImageData(data: TemplateData, options: ImageOptions & IgnoreMissingKeys): Promise<string> {
         const height = options?.height || 0;
         const width = options?.width || 0;
 
         await BrotherSdk.printerIsReady();
         await openTemplate(this.templatePath);
-        await populateObjectsInTemplate(data);
+        await populateObjectsInTemplate(data, { ignoreMissingKeys: options.ignoreMissingKeys });
         const base64EncodedPNG = await imageData(width, height);
         await closeTemplate();
 

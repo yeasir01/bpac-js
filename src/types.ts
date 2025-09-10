@@ -8,14 +8,17 @@ export type Constructor = {
     printer?: string;
 };
 
-export type PrintOptions = {
-    copies?: number;
-    printName?: string;
+export type IgnoreMissingKeys = {
     /**
      * If true, the print will not fail if a key is not present in the template.
      * @default false
      */
     ignoreMissingKeys?: boolean;
+};
+
+export type PrintOptions = {
+    copies?: number;
+    printName?: string;
 };
 
 export enum PrintOptionFlag {
@@ -44,7 +47,7 @@ export type FitPage = {
     fitPage?: boolean;
 };
 
-export type PrintConfig = PrintOptions & StartPrintOptions & FitPage;
+export type PrintConfig = PrintOptions & StartPrintOptions & FitPage & IgnoreMissingKeys;
 
 export type ImageOptions = {
     width?: number;

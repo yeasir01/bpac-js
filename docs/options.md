@@ -33,6 +33,7 @@ If an option is undefined, the default configuration specified in the template f
 | color | boolean | - |Print in color.|
 | mono | boolean | - |Print in monochrome.|
 | fitPage | boolean | - |Specify whether to adjust the size and position of objects in the template in accordance with layout changes resulting from media changes. If set to true, adjustments will be made; otherwise, if set to false or undefined, no adjustments will be applied..|
+| ignoreMissingKeys | boolean | false | By default, printing expects all keys and values to match object names and types in the template file. When set to true, missing template values are skipped without causing errors.|
 
 ## PT-9500PC / PT-9600 / PT-3600 
 | **noCut** | **autoCut** | **halfCut**| **chainPrint** | **Result** |
