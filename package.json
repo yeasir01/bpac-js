@@ -12,7 +12,7 @@
     "dev": "tsup --watch",
     "type-check": "tsc",
     "test": "jest",
-    "version": "npx changeset version"
+    "version": "npx changeset"
   },
   "engines": {
     "node": ">=22.14.0"
