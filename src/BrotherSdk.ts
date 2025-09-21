@@ -3,6 +3,7 @@ import {
     getExportType,
     getFileExtension,
     getStartPrintOptions,
+    BpacError
 } from "./helpers";
 import {
     TemplateData,
@@ -46,21 +47,28 @@ export default class BrotherSdk {
      * with the SDK functionalities.
      * @param {Constructor} object
      * @param {String} object.templatePath
-     * Specifies the path to the template file
-     * - Win path: "C:\\\path\\\to\\\your\\\template.lbx"
-     * - Unix path: "/home/templates/template.lbx"
-     * - UNC path: "\\\server\share\template.lbx"
-     * - Remote URL: "https://yourserver.com/templates/label.lbx"
+        * Specifies the path to the template file.
+        * Supported path formats:
+        * - Windows: C:\\\path\\\to\\\your\\\template.lbx
+        * - UNC: \\\server\share\template.lbx
+        * - Unix: /home/templates/template.lbx
+        * - Remote URL: https://yourserver.com/templates/label.lbx
+        * Important:
+        * For remote URLs, the file must be hosted on the **same origin** as your webpage to avoid CORS issues in front-end only environments.
+        * If you need to open files from a different origin, consider using a local file picker or a server-side proxy to fetch the file.
      * @param {String} [object.exportDir = ""]
      * The path for exporting generated assets.
-     * - Win path: "C:\\\path\\\to\\\your\\\"
-     * - Unix path: "/home/templates/"
+     * - Win path: C:\\\path\\\to\\\your\\\
+     * - Unix path: /home/templates/
      * @param {String} [object.printer = undefined]
      * The name of the printer used for printing. Specify the printer name, not the path.
      * - Example: "Brother QL-820NWB"
+     * @static
+     * Use the static method `getPrinterList()` to retrieve an array of installed Brother printers.
+     * Each item in the array represents an available printer.
      * @example
-     * //use the static method getPrinterList() to obtain a list of installed printers.
-     * BrotherSdk.getPrinterList()
+     * const printers = await BrotherSdk.getPrinterList();
+     * console.log("Available printers:", printers);
      */
     constructor({ templatePath, exportDir, printer }: Constructor) {
         this.templatePath = templatePath;
@@ -179,7 +187,7 @@ export default class BrotherSdk {
     async print(data: TemplateData | TemplateData[], config?: PrintConfig): Promise<boolean> {
         const {
             copies = 1,
-            printName = "BPAC-Document",
+            printName = "BPAC-JS Document",
             fitPage = false,
             ...opts
         } = config || {};
@@ -351,9 +359,11 @@ export default class BrotherSdk {
                     resolve();
                 } else {
                     reject(
-                        new Error(
-                            "Cannot establish printer communication: b-PAC extension missing or inactive. Install/enable.",
-                        ),
+                        new BpacError(
+                            `Printer initialization failed: Unable to establish communication within ${timeout} ms. ` +
+                            "Verify that the b-PAC extension is installed, active, and that the printer is connected.", 
+                            `PrinterIsReady(timeout=${timeout})`
+                        )
                     );
                 }
             }, timeout);
