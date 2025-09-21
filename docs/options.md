@@ -3,7 +3,7 @@ Print options apply exclusively to models that support each respective function.
 
 If an option is undefined, the default configuration specified in the template file will be applied.
 
-## Supported Ext Types (exporting files)
+## Supported Extension Types (exporting files)
 | **Description** | **Extension** |
 |---|:---:|
 | LBX type | .lbx |
@@ -16,7 +16,7 @@ If an option is undefined, the default configuration specified in the template f
 | **Key** | **Type** | **Default** | **Description** |
 |---|---|:---:|---|
 | copies | number | 1 |Number of copies to print.|
-| printName | string | "BPAC-Document" |Document Name for print queue.|
+| printName | string | "BPAC-JS Document" |Document Name for print queue.|
 | autoCut | boolean | - |Auto cut after print.|
 | cutPause | boolean | - |Pause to cut is applied. Valid only with models not supporting the auto cut function.|
 | cutMark | boolean | - |Cut mark is inserted. Valid only with models not supporting the auto cut function.|

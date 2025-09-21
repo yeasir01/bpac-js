@@ -9,14 +9,14 @@ $ npm install bpac-js
 Either named or default imports ok.
 
 ```javascript
-import BrotherBrotherSdk from "bpac-js";
+import BrotherSdk from "bpac-js";
 ```
 ```javascript
-import { BrotherBrotherSdk } from "bpac-js";
+import { BrotherSdk } from "bpac-js";
 ```
 
 ### CDN
-Include import at the top of your "script.js" file, and set script type to module in "index.html".  Use live-server or equivalent for development.
+Include import at the top of your "script.js" file, and set script type to module in "index.html". Use VS Code live-server for development.
 
 ```javascript
 import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@{version#}/dist/index.js";
@@ -84,7 +84,7 @@ const label = new BrotherSdk({
 });
 
 // Important: The keys and values must match the object name & type in the template file.
-const dataObject = {
+const templateData = {
     title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
@@ -92,7 +92,7 @@ const dataObject = {
 };
 
 // All Options: Docs >> Options >> Print Options
-const options = {
+const printOptions = {
     copies: 3,
     printName: "Air Force Label",
     highResolution: true
@@ -100,7 +100,7 @@ const options = {
 
 const handlePrint = async () => {
     try {
-        const isPrinted = await label.print(dataObject, options);
+        const isPrinted = await label.print(templateData, printOptions);
         console.log({isPrinted}) // Output: {isPrinted: true}
     } catch (error) {
         console.log({error})
@@ -137,13 +137,13 @@ const dataArray = [{
 }];
 
 // All Options: Docs >> Options >> Print Options
-const options = {
+const printOptions = {
     highResolution: true
 }
 
 const handlePrint = async () => {
     try {
-        const isPrinted = await label.print(dataArray, options);
+        const isPrinted = await label.print(dataArray, printOptions);
         console.log({isPrinted}) // Output: {isPrinted: true}
     } catch (error) {
         console.log({error})
@@ -167,20 +167,20 @@ const label = new BrotherSdk({
 });
 
 // Important: The keys and values must match the object name & type in the template file.
-const data = {
+const templateData = {
     title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
-const options = {
+const imageOptions = {
     height: 300
 }
 
 const handlePreview = async () => {
     try {
-        const base64EncodedPNG = await label.getImageData(data, options);
+        const base64EncodedPNG = await label.getImageData(templateData, imageOptions);
         imgElement.src = base64EncodedPNG;
     } catch (error) {
         console.log({error})
@@ -204,19 +204,21 @@ const label = new BrotherSdk({
 });
 
 // The keys and values must match the objects/types in the template file.
-const data = {
+const templateData = {
     title: "Air Force One",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
-const newFileName = "shoe-label-img.bmp";
+// All Options: Docs >> Options >> Supported Ext Types
+const fileName = "shoe-label-img.bmp";
+
+const dpi = 300;
 
 const handleExport = async () => {
     try {
-        // All Options: Docs >> Options >> Supported Ext Types
-        const success = await label.export(data, newFileName, 300);
+        const success = await label.export(templateData, fileName, dpi);
         console.log({success}) // Output: {success: true}
     } catch (error) {
         console.log({error})
