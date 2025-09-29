@@ -53,13 +53,13 @@ export default class BrotherSdk {
         * - UNC: \\\server\share\template.lbx
         * - Unix: /home/templates/template.lbx
         * - Remote URL: https://yourserver.com/templates/label.lbx
-        * Important:
-        * For remote URLs, the file must be hosted on the **same origin** as your webpage to avoid CORS issues in front-end only environments.
-        * If you need to open files from a different origin, consider using a local file picker or a server-side proxy to fetch the file.
+
+    ⚠️ Important:
+    When working with remote URLs, the file must be hosted on the **same origin** as your webpage to avoid to CORS issues.
      * @param {String} [object.exportDir = ""]
      * The path for exporting generated assets.
      * - Win path: C:\\\path\\\to\\\your\\\
-     * - Unix path: /home/templates/
+     * - Unix path: /home/pictures/
      * @param {String} [object.printer = undefined]
      * The name of the printer used for printing. Specify the printer name, not the path.
      * - Example: "Brother QL-820NWB"
@@ -109,7 +109,7 @@ export default class BrotherSdk {
      * @param {Number} [config.copies = 1]
      * Number of copies to print.
      *
-     * @param {String} [config.printName = "BPAC-Document"]
+     * @param {String} [config.printName = "BPAC-JS Document"]
      * Print document name.
      *
      * @param {boolean} [config.autoCut = false]
