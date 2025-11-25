@@ -1,5 +1,6 @@
 /**
  * DEMO ONLY: Example usage of bpac-js.
+ * Configured for VS Code live-server just tap the live server icon to view on your browser.
  * This code is not production-ready. 
  * No advanced error handling, or best practices are applied.
 */
