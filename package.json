@@ -12,7 +12,8 @@
     "dev": "tsup --watch",
     "type-check": "tsc",
     "test": "jest",
-    "version": "npx changeset"
+    "version": "npx changeset",
+    "release": "changeset publish"
   },
   "engines": {
     "node": ">=22.14.0"

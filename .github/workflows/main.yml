@@ -1,26 +1,35 @@
 name: CI
 
 on:
-    push:
-        branches:
-            - "**"
+  push:
+    branches:
+      - "**"
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-                  cache: "npm"
-            - name: INSTALL PACKAGES
-              run: npm install --frozen-lockfile
-            - name: TYPECHECK
-              run: npm run type-check
-            - name: LINT
-              run: npm run lint
-            - name: TEST
-              run: npm run test
-            - name: BUILD/BUNDLE
-              run: npm run build
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install Dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Type Check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm run test
+
+      - name: Build / Bundle
+        run: npm run build
