@@ -16,27 +16,23 @@ jobs:
   publish:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
-          registry-url: https://registry.npmjs.org
-          cache: npm
-
-      - name: Set NODE_ENV
-        run: echo "NODE_ENV=production" >> $GITHUB_ENV
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm ci --include=dev
 
-      - name: Build Project
+      - name: Build
         run: npm run build
 
-      - name: Create Version & Publish
+      - name: Changesets - Version / Publish
         id: changesets
         uses: changesets/action@v1
         with:
