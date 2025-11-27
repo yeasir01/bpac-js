@@ -3,12 +3,16 @@ import {
     getExportType,
     getFileExtension,
     getStartPrintOptions,
+    BpacError,
+    assertSameOrigin
 } from "./helpers";
 import {
     TemplateData,
-    PrintConfig,
+    PrintOptions,
     ImageOptions,
-    Constructor,
+    ExportOptions,
+    BrotherSDKOptions,
+    PrinterStatus,
 } from "./types";
 import {
     openTemplate,
@@ -20,16 +24,17 @@ import {
     startPrint,
     printOut,
     endPrint,
-    exportTemplate,
+    exportDocument,
     setPrinter,
+    printerStatus,
 } from "./adapter";
 
-export default class BrotherSdk {
+export default class BrotherSDK {
     templatePath: string;
 
-    printer: undefined | string;
+    printer?: string;
 
-    exportDir: undefined | string;
+    exportDir?: string;
 
     // One mutation observer, regardless of instances.
     static #observer: MutationObserver | null = null;
@@ -42,101 +47,176 @@ export default class BrotherSdk {
      * Create a new instance of this class to interact with the Brother SDK
      * in JavaScript. This object facilitates communication and integration
      * with the SDK functionalities.
-     * @param {Object} object
-     * @param {String} object.templatePath
-     * Specifies the path to the template file
-     * - Win path: "C:\\\path\\\to\\\your\\\template.lbx"
-     * - Unix path: "/home/templates/template.lbx"
-     * - UNC path: "\\\server\share\template.lbx"
-     * - Remote URL: "http://yourserver.com/templates/label.lbx"
-     * @param {String} [object.exportDir = ""]
+     * @param {BrotherSDKOptions} options
+     * @param {String} options.templatePath
+        * Specifies the path to the template file.
+        * Supported path formats:
+        * - Windows: C:\\\path\\\to\\\your\\\template.lbx
+        * - UNC: \\\server\share\template.lbx
+        * - Unix: /home/templates/template.lbx
+        * - Remote URL: https://yourserver.com/templates/label.lbx
+
+    ⚠️ Important:
+    When working with remote URLs, the file must be hosted on the **same origin** as your webpage to avoid to CORS issues.
+     * @param {String} [options.exportDir = ""]
      * The path for exporting generated assets.
-     * - Win path: "C:\\\path\\\to\\\your\\\"
-     * - Unix path: "/home/templates/"
-     * @param {String} [object.printer = undefined]
+     * - Win path: C:\\\path\\\to\\\your\\\
+     * - Unix path: /home/pictures/
+     * @param {String} [options.printer = undefined]
      * The name of the printer used for printing. Specify the printer name, not the path.
      * - Example: "Brother QL-820NWB"
+     * @static
+     * Use the static method `getPrinterList()` to retrieve an array of installed Brother printers.
+     * Each item in the array represents an available printer.
      * @example
-     * //use the static method getPrinterList() to obtain a list of installed printers.
-     * BrotherSdk.getPrinterList()
+     * const printers = await BrotherSdk.getPrinterList();
+     * console.log("Available printers:", printers);
      */
-    constructor({ templatePath, exportDir, printer }: Constructor) {
+    constructor({ templatePath, exportDir, printer }: BrotherSDKOptions) {
+        assertSameOrigin(templatePath);
         this.templatePath = templatePath;
         this.exportDir = exportDir;
         this.printer = printer;
-        BrotherSdk.#initialize();
+        BrotherSDK.#initialize();
+    }
+
+    async getPrinterStatus(): Promise<PrinterStatus> {
+        await BrotherSDK.printerIsReady();
+        await openTemplate(this.templatePath);
+        const statusObject = await printerStatus();
+        await closeTemplate();
+        return statusObject;
     }
 
     /**
-     * **Method For Printing A Label**
+     * **Method for Printing a Label (Single or Batch)**
      *
-     * Asynchronously print a label using the specified configurations.
+     * Asynchronously prints one or multiple labels using the specified configurations.
      *
-     * @param {Object} data
-     * An object containing key-value pairs, where each key represents an object ID,
-     * and the corresponding value is the text to be set on that object.
-     * @param {Object} [config]
-     * Optional
-     * @param {Number} [config.copies = 1]
+     * This function supports both **single-object** and **batch printing**.
+     * - If a single `TemplateData` object is passed, it prints one label.
+     * - If an array of `TemplateData` objects is passed, it prints multiple labels in sequence.
+     *
+     * Note: Flags are valid only with those models that support each function.
+     * The setting is invalid with models that do not support a function, 
+     * even if a flag is set.
+     *
+     * @param {TemplateData | TemplateData[]} data
+     * A **single object** or **an array of objects** containing key-value pairs.
+     * Each key represents an object ID, and the corresponding value is the text
+     * to be set on that object.
+     *
+     * @param {PrintOptions} [options]
+     * Optional configuration object.
+     *
+     * @param {Number} [options.copies = 1]
      * Number of copies to print.
-     * @param {String} [config.printName = "BPAC-Document"]
+     *
+     * @param {String} [options.printName = "BPAC-JS Document"]
      * Print document name.
-     * @param {boolean} [config.autoCut = false]
+     *
+     * @param {boolean} [options.autoCut = false]
      * Auto cut is applied.
-     * @param {boolean} [config.cutPause = false]
+     *
+     * @param {boolean} [options.cutPause = false]
      * Pause to cut is applied. Valid only with models not supporting the auto cut function.
-     * @param {boolean} [config.cutMark = false]
+     *
+     * @param {boolean} [options.cutMark = false]
      * Cut mark is inserted. Valid only with models not supporting the auto cut function.
-     * @param {boolean} [config.halfCut = false]
+     *
+     * @param {boolean} [options.halfCut = false]
      * Executes half cut.
-     * @param {boolean} [config.chainPrint = false]
+     *
+     * @param {boolean} [options.chainPrint = false]
      * Continuous printing is performed. The final label is not cut, but when the next
      * labels are output, the preceding blank is cut in line with the cut option setting.
-     * @param {boolean} [config.tailCut = false]
+     *
+     * @param {boolean} [options.tailCut = false]
      * Whenever a label is output, the trailing end of the form is forcibly cut to
      * leave a leading blank for the next label output.
-     * @param {boolean} [config.specialTape = false]
+     *
+     * @param {boolean} [options.specialTape = false]
      * No cutting is performed when printing on special tape.
      * Valid only with PT-2430PC.
-     * @param {boolean} [config.cutAtEnd = false]
+     *
+     * @param {boolean} [options.cutAtEnd = false]
      * "Cut at end" is performed.
-     * @param {boolean} [config.noCut = false]
+     *
+     * @param {boolean} [options.noCut = false]
      * No cutting is performed. Valid only with models supporting cut functions.
-     * @param {boolean} [config.mirroring = false]
+     *
+     * @param {boolean} [options.mirroring = false]
      * Executes mirror printing.
-     * @param {boolean} [config.quality = false]
+     *
+     * @param {boolean} [options.quality = false]
      * Fine-quality printing is performed.
-     * @param {boolean} [config.highSpeed = false]
+     *
+     * @param {boolean} [options.highSpeed = false]
      * High-speed printing is performed.
-     * @param {boolean} [config.highResolution = false]
+     *
+     * @param {boolean} [options.highResolution = false]
      * High-resolution printing is performed.
-     * @param {boolean} [config.color = false]
+     *
+     * @param {boolean} [options.color = false]
      * Color printing is performed.
-     * @param {boolean} [config.mono = false]
+     *
+     * @param {boolean} [options.mono = false]
      * Monochrome printing is performed. Valid only with models supporting
      * the color printing function.
-     * @param {boolean} [config.fitPage = false]
+     *
+     * @param {boolean} [options.fitPage = false]
      * Specify whether to adjust the size and position of objects in the template in accordance
      * with layout changes resulting from media changes. If set to true, adjustments
      * will be made; otherwise, if set to false or undefined, no adjustments will be applied.
+     * 
+     * @param {boolean} [options.ignoreMissingKeys = false]
+     *  If `true`, any keys in `data` that do not match objects in the template
+     *  will be silently ignored.  
+     *  If `false`, an error will be thrown when `data` contains keys that do not
+     *  correspond to any object in the template.
+     * 
+     * @returns {Promise<boolean>}
+     * Resolves to `true` when printing completes successfully.
+     *
+     * **Usage Examples**
+     *
+     * **Single Print**
+     * ```typescript
+     * await printer.print({ text: "Label 1", barcode: "12345" }, { copies: 2 });
+     * ```
+     *
+     * **Batch Print**
+     * ```typescript
+     * await printer.print([
+     *     { text: "Label 1", barcode: "12345" },
+     *     { text: "Label 2", barcode: "67890" }
+     * ], { copies: 2 });
+     * ```
      */
-    async print(data: TemplateData, config?: PrintConfig): Promise<boolean> {
+    async print(data: TemplateData | TemplateData[], options?: PrintOptions): Promise<boolean> {
         const {
             copies = 1,
-            printName = "BPAC-Document",
+            printName = "BPAC-JS Document",
             fitPage = false,
-            ...opts
-        } = config || {};
+            ignoreMissingKeys = false,
+            ...rest
+        } = options || {};
 
-        await BrotherSdk.printerIsReady();
+        await BrotherSDK.printerIsReady();
+        const bitwiseOpts = getStartPrintOptions(rest);
 
-        const hexValue = getStartPrintOptions(opts);
+        // Normalize data into an array
+        const dataArray = Array.isArray(data) ? data : [data];
 
         await openTemplate(this.templatePath);
         await setPrinter(this.printer, fitPage);
-        await populateObjectsInTemplate(data);
-        await startPrint(printName, hexValue);
-        await printOut(copies);
+
+        for (const item of dataArray) {
+            await populateObjectsInTemplate(item, ignoreMissingKeys);
+            await startPrint(printName, bitwiseOpts);
+            await printOut(copies);
+        }
+
         await endPrint();
         await closeTemplate();
 
@@ -148,34 +228,39 @@ export default class BrotherSdk {
      *
      * Asynchronously retrieves and returns Base64-encoded image data for a label.
      *
-     * @param {object} data
+     * @param {TemplateData} data
      * An object containing key-value pairs, where each key represents an object ID,
      * and the corresponding value is the text to be set on that object.
-     * @param {object} options
+     * @param {ImageOptions} options
      * Optional
-     * @param {string} options.height
+     * @param {number} [options.height = 0]
      * If the vertical size (dpi) of the image to be acquired is specified as 0, it
      * becomes a size that maintains the aspect ratio based on width.
-     * @param {string} options.width
+     * @param {number} [options.width = 0]
      * Horizontal size (dpi) of the image to be acquired. If 0 is specified,
      * it becomes a size that maintains the aspect ratio based on height.
+     * @param {boolean} [options.ignoreMissingKeys = false]
+     *  If `true`, any keys in `data` that do not match objects in the template
+     *  will be silently ignored.  
+     *  If `false`, an error will be thrown when `data` contains keys that do not
+     *  correspond to any object in the template.
      * @returns {Promise<string>}
      * A promise that resolves to a Base64 encoded string representing the image data.
      */
-    async getImageData(
-        data: TemplateData,
-        options: ImageOptions,
-    ): Promise<string> {
-        const height = options?.height || 0;
-        const width = options?.width || 0;
+    async getImageData(data: TemplateData, options?: ImageOptions): Promise<string> {
+        const {
+            width = 0,
+            height = 0,
+            ignoreMissingKeys = false
+        } = options || {};
 
-        await BrotherSdk.printerIsReady();
+        await BrotherSDK.printerIsReady();
         await openTemplate(this.templatePath);
-        await populateObjectsInTemplate(data);
-        const base64Data = await imageData(width, height);
+        await populateObjectsInTemplate(data, ignoreMissingKeys);
+        const base64EncodedPNG = await imageData(width, height);
         await closeTemplate();
 
-        return `${base64Data}`;
+        return base64EncodedPNG;
     }
 
     /**
@@ -188,9 +273,9 @@ export default class BrotherSdk {
      *
      */
     async getPrinterName(): Promise<string> {
-        await BrotherSdk.printerIsReady();
+        await BrotherSDK.printerIsReady();
         await openTemplate(this.templatePath);
-        const printerName = getPrinterName();
+        const printerName = await getPrinterName();
         await closeTemplate();
         return printerName;
     }
@@ -205,65 +290,72 @@ export default class BrotherSdk {
      * an object ID, and the corresponding value is the text to be set on that object.
      * @param {String} [filePathOrFileName = ""]
      * Provide a file name or absolute path.
-     * - e.g. = "myLabel.lbx" will be stored in exportDir.
-     * - e.g. = "C:/Templates/myLabel.lbx" to override the exportDir.
-     * - Supported types = .lbx | .lbl | .lbi | .bmp | .paf
-     * @param {Number} [resolution = 0]
+     * - e.g. = "myLabel.lbx" will be stored in the exportDir path provided.
+     * - e.g. = "C:/Templates/myLabel.lbx" will override the exportDir.
+     * - Supported file types = .lbx | .lbl | .lbi | .bmp | .paf
+     * @param {ExportOptions} options
+     * Optional
+     * @param {Number} [options.resolution = 0]
      *  Provide a resolution in dpi used for the conversion into bitmap format.
      *  Specifies the resolution of the output device.
      *  (Screen: 72 or 96; output to SC-2000: 600)
      *  If a value of 0 is specified, the printer resolution is used.
-     *
      *  The resolution param is only valid for .lbi and .bmp extensions.
+     *  @param {boolean} [options.ignoreMissingKeys = false]
+     *  If `true`, any keys in `data` that do not match objects in the template
+     *  will be silently ignored.  
+     *  If `false`, an error will be thrown when `data` contains keys that do not
+     *  correspond to any object in the template.
      */
-    async export(
-        data: TemplateData,
-        filePathOrFileName: string,
-        resolution: number = 0,
-    ): Promise<boolean> {
+    async export(data: TemplateData, filePathOrFileName: string, options?: ExportOptions): Promise<boolean> {
+        const {
+            resolution = 0,
+            ignoreMissingKeys = false
+        } = options || {};
+
         const fileExt = getFileExtension(filePathOrFileName);
         const fileType = getExportType(fileExt);
 
-        const path:string = getAbsolutePath(
+        const path: string = getAbsolutePath(
             this.exportDir,
             filePathOrFileName,
         );
 
-        await BrotherSdk.printerIsReady();
+        await BrotherSDK.printerIsReady();
         await openTemplate(this.templatePath);
-        await populateObjectsInTemplate(data);
-        await exportTemplate(fileType, path, resolution);
+        await populateObjectsInTemplate(data, ignoreMissingKeys);
+        await exportDocument(fileType, path, resolution);
         await closeTemplate();
 
         return true;
     }
 
-    static #initialize():void {
+    static #initialize(): void {
         const targetNode = document.body;
         const className = "bpac-extension-installed";
 
-        if (BrotherSdk.#ready) {
+        if (BrotherSDK.#ready) {
             return;
         }
 
-        if (BrotherSdk.#observer) {
+        if (BrotherSDK.#observer) {
             return;
         }
 
         if (targetNode.classList.contains(className)) {
-            BrotherSdk.#ready = true;
+            BrotherSDK.#ready = true;
             return;
         }
 
-        BrotherSdk.#observer = new MutationObserver(() => {
+        BrotherSDK.#observer = new MutationObserver(() => {
             if (targetNode.classList.contains(className)) {
-                BrotherSdk.#ready = true;
-                BrotherSdk.#observer?.disconnect();
-                BrotherSdk.#observer = null;
+                BrotherSDK.#ready = true;
+                BrotherSDK.#observer?.disconnect();
+                BrotherSDK.#observer = null;
             }
         });
 
-        BrotherSdk.#observer.observe(targetNode, {
+        BrotherSDK.#observer.observe(targetNode, {
             attributes: true,
             attributeFilter: ["class"],
         });
@@ -280,25 +372,27 @@ export default class BrotherSdk {
      *
      */
     static async getPrinterList(): Promise<string[]> {
-        await BrotherSdk.printerIsReady();
+        await BrotherSDK.printerIsReady();
         const printers = await getPrinters();
         return printers;
     }
 
-    static async printerIsReady(timeout: number = 3000): Promise<boolean> {
-        if (BrotherSdk.#ready) {
-            return true;
+    static async printerIsReady(timeout: number = 2000): Promise<void> {
+        if (BrotherSDK.#ready) {
+            return;
         }
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                if (BrotherSdk.#ready) {
-                    resolve(true);
+                if (BrotherSDK.#ready) {
+                    resolve();
                 } else {
                     reject(
-                        new Error(
-                            "Cannot establish printer communication: b-PAC extension missing or inactive. Install/enable.",
-                        ),
+                        new BpacError(
+                            `Printer initialization failed: Unable to establish communication within ${timeout} ms. ` +
+                            "Verify that the b-PAC extension is installed, active, and that the printer is connected.", 
+                            `PrinterIsReady(timeout=${timeout})`
+                        )
                     );
                 }
             }, timeout);

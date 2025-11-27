@@ -11,6 +11,7 @@ lerna-debug.log*
 node_modules/
 dist/
 lib/
+coverage/
 
 # dotenv environment variable files
 .env
@@ -25,6 +26,9 @@ lib/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# IDE
+.idea
 
 # yarn v2
 .yarn/cache

@@ -1,22 +1,27 @@
 {
     "compilerOptions": {
-        "target": "ES2017",
+        "target": "ES2020",
         "module": "ESNext",
+        "moduleResolution": "bundler",
         "strict": true,
-        "noImplicitAny": true,
+        "esModuleInterop": true,
         "isolatedModules": true,
         "noEmit": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true,
-        "noImplicitReturns": true,
         "allowImportingTsExtensions": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
         "noUncheckedIndexedAccess": true,
-        "moduleResolution": "Bundler",
         "allowJs": true,
         "checkJs": false,
-        "lib": ["ES2017", "DOM", "DOM.Iterable"]
+        "lib": ["ES2020", "DOM"]
     },
-    "include": ["src/**/*.ts", "src/**/*.js", "tests/*.spec.ts"],
-    "exclude": ["node_modules"]
+    "ts-node": {
+        "esm": true
+    },
+    "include": ["src/**/*.ts", "test/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
 }
