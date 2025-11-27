@@ -79,25 +79,25 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 ## Usage
 
 ```javascript
-// Script File
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+// Vanilla JS Script File
+import BrotherSDK from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 
-const shoeLabel = new BrotherSdk({
-    templatePath: "C:/Templates/shoe-template.lbx",
-    exportPath: "C:/Users/YourProfile/Desktop/Exported Labels/",
+const label = new BrotherSDK({
+    templatePath: "C:\\Templates\\shoe-template.lbx",
+    exportPath: "C:\\Users\\YourProfile\\Desktop\\Exported Labels\\",
 });
 
 // The keys and values must match the objects/types in the template file.
-const data = {
+const labelData = {
     title: "Air Force 1",
     price: "$149.99",
     barcode: "091207567724",
     date: new Date("2024-1-20"),
 };
 
-const options = {
+const printOptions = {
     copies: 1, // Optional - Defaults: 1
     printName: "Air Force One Label", // Optional - Defaults: BPAC-Document
     highResolution: true // Optional
@@ -105,7 +105,7 @@ const options = {
 
 const sendToPrinter = async () => {
     try {
-        const isPrinted = await shoeLabel.print(data, options);
+        const isPrinted = await label.print(labelData, printOptions);
         console.log({isPrinted})
     } catch (error) {
         console.log({error})
@@ -117,9 +117,7 @@ printBtn.addEventListener("click", sendToPrinter);
 
 ## Acknowledgments
 
-Special thanks to Brother for their QL Series Printer SDK. This project wouldn't be possible without their technology.
-
-Happy coding with Brother QL Series Printer SDK for Web Browsers! 🚀
+Special thanks to Brother for their Bpac Printer SDK. This project wouldn't be possible without their technology.
 
 ## License
 

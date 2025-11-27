@@ -46,7 +46,7 @@ export const getAbsolutePath = (
 };
 
 // Optimized 03/15/25
-export const getExportType = (fileExt:string):ExportType => {
+export const getExportType = (fileExt: string): ExportType => {
     switch (fileExt) {
     case ".lbx":
         return 0x1;
@@ -59,7 +59,7 @@ export const getExportType = (fileExt:string):ExportType => {
     case ".paf":
         return 0x5;
     default:
-        throw new Error(`Invalid extension. Expected ".lbx, .lbl, .lbi, .bmp, .paf". Received: ${fileExt}.`);
+        throw new BpacError(`Invalid extension. Expected ".lbx, .lbl, .lbi, .bmp, .paf". Received: ${fileExt}.`, `getExportType(${fileExt})`);
     }
 };
 
@@ -93,3 +93,50 @@ export const getFileExtension = (filePathOrFileName: string): string => {
     const extension = baseName.slice(lastDotIdx).toLowerCase();
     return extension;
 };
+
+export class BpacError extends Error {
+    context: string;
+
+    constructor(message: string, context: string) {
+        super(message);
+        this.name = "BpacError";
+        this.context = context;
+    }
+}
+
+export const handleVendorError = (error: unknown, context: string): never => {
+    let message = `An unexpected error occurred in ${context}.`;
+
+    if (typeof error === "string") {
+        if (error.includes("Can't connect to b-PAC")) {
+            message = "Cannot connect to b-PAC. Ensure the Brother printer service is running and the printer is connected.";
+        } else {
+            message = `b-PAC error: ${error}`;
+        }
+    }
+
+    if (error instanceof Error && error.message) {
+        message = error.message.includes("Can't connect to b-PAC")
+            ? "Cannot connect to b-PAC. Ensure the Brother printer service is running and the printer is connected."
+            : error.message;
+    }
+
+    throw new BpacError(message, context);
+}
+
+export const assertSameOrigin = (templatePath: string): void => {
+    try {
+        const url = new URL(templatePath);
+
+        const sameOrigin =
+            url.protocol === window.location.protocol &&
+            url.hostname === window.location.hostname &&
+            (url.port || "") === (window.location.port || "");
+
+        if (!sameOrigin) {
+            console.warn(`Cross-origin templatePath blocked: "${templatePath}". Remote template URLs must be hosted on the same origin to avoid CORS issues.`)
+        }
+    } catch {
+        return;
+    }
+}

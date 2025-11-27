@@ -310,11 +310,7 @@ export class IObject {
         return n.appendMessage(r), u;
     }
     set HorizontalAlign(t) {
-        const i = {
-            method: "IObject::SetHorizontalAlign",
-            p: this.p_,
-            align: t,
-        };
+        const i = { method: "IObject::SetHorizontalAlign", p: this.p_, align: t };
         n.appendMessage(i);
     }
     get Name() {
@@ -350,11 +346,7 @@ export class IObject {
         return n.appendMessage(r), u;
     }
     set Orientation(t) {
-        const i = {
-            method: "IObject::SetOrientation",
-            p: this.p_,
-            orientation: t,
-        };
+        const i = { method: "IObject::SetOrientation", p: this.p_, orientation: t };
         n.appendMessage(i);
     }
     get SelectionEnd() {
@@ -372,11 +364,7 @@ export class IObject {
         return n.appendMessage(r), u;
     }
     set SelectionEnd(t) {
-        const i = {
-            method: "IObject::SetSelectionEnd",
-            p: this.p_,
-            selection: t,
-        };
+        const i = { method: "IObject::SetSelectionEnd", p: this.p_, selection: t };
         n.appendMessage(i);
     }
     get SelectionStart() {
@@ -475,9 +463,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
-                        : n(f.detail.X);
+                    f.detail.ret == !1 || f.detail.connect == !1 ? r(t) : n(f.detail.X);
                 };
                 document.addEventListener(i, u);
             });
@@ -493,9 +479,7 @@ export class IObject {
             u = new Promise((n, r) => {
                 const u = (f) => {
                     document.removeEventListener(i, u),
-                    f.detail.ret == !1 || f.detail.connect == !1
-                        ? r(t)
-                        : n(f.detail.Y);
+                    f.detail.ret == !1 || f.detail.connect == !1 ? r(t) : n(f.detail.Y);
                 };
                 document.addEventListener(i, u);
             });
@@ -515,10 +499,7 @@ export class IObjects {
             u = { method: r, p: this.p_, index: i },
             f = new Promise((n, i) => {
                 const u = (f) => {
-                    if (
-                        (document.removeEventListener(r, u),
-                        f.detail.connect == !1)
-                    )
+                    if ((document.removeEventListener(r, u), f.detail.connect == !1))
                         i(t);
                     else if (f.detail.ret == !1) n();
                     else if (f.detail.p >= 0) {
@@ -591,10 +572,7 @@ export class IObjects {
             },
             l = new Promise((n, i) => {
                 const r = (u) => {
-                    if (
-                        (document.removeEventListener(h, r),
-                        u.detail.connect == !1)
-                    )
+                    if ((document.removeEventListener(h, r), u.detail.connect == !1))
                         i(t);
                     else if (u.detail.ret == !1) n();
                     else if (u.detail.p >= 0) {
@@ -985,10 +963,7 @@ export class IDocument {
             u = { method: r, name: i },
             f = new Promise((n, i) => {
                 const u = (f) => {
-                    if (
-                        (document.removeEventListener(r, u),
-                        f.detail.connect == !1)
-                    )
+                    if ((document.removeEventListener(r, u), f.detail.connect == !1))
                         i(t);
                     else if (f.detail.ret == !1) n();
                     else if (f.detail.p >= 0) {

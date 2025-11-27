@@ -1,64 +1,51 @@
-import * as bpac from "./vendor/bpac-v3.4.js";
+import * as bpac from "./vendor/bpac-3.4.014.js";
 import { TemplateData, ObjectTypes, PrinterStatus, ExportType } from "./types.ts";
+import { handleVendorError } from "./helpers.ts";
 
 const Doc = bpac.IDocument;
 
-// Optimized 03/14/25
 export const openTemplate = async (path: string): Promise<void> => {
     if (!path || typeof path !== "string" || path.trim() === "") {
-        throw new TypeError("Template path must be a non-empty string.");
+        throw new Error("Template path must be a non-empty string.");
     }
 
     try {
         const isOpen:boolean = await Doc.Open(path);
 
         if (!isOpen) {
-            throw new Error(`Failed to open the template '${path}'. Check path and try again.`);
+            throw new Error(
+                `Failed to open the template at ${path}. Please ensure the file exists, is accessible, and is served from the same origin to avoid CORS issues.`
+            );
         }
     } catch (error: unknown) {
-        if (error instanceof TypeError) {
-            throw error;
-        }
-
-        if (error instanceof Error && error.message) {
-            throw error;
-        }
-
-        throw new Error(`An unexpected error occurred while opening template '${path}'.`);
+        handleVendorError(error, `openTemplate(path=${path})`);
     }
 };
 
-// Optimized 03/15/25
 export const setPrinter = async (printerName: string | undefined, fitPage: boolean): Promise<void> => {
     try {
         if (!printerName) {
             throw new Error("Printer name is undefined.");
         }
 
+        if (typeof fitPage !== "boolean"){
+            throw new TypeError("fitPage must be a typeof Boolean");
+        }
+
         const fitPageVariant: number = fitPage ? -1 : 0; // Convert boolean to VARIANT_BOOL
 
-        const result: boolean = await Doc.SetPrinter(printerName, fitPageVariant);
+        const isSet: boolean = await Doc.SetPrinter(printerName, fitPageVariant);
 
-        if (!result) {
+        if (!isSet) {
             throw new Error("Failed to set printer.");
         }
 
     } catch (error) {
-        try {
-            await closeTemplate();
-        } catch (closeError) {
-            console.error("Error closing template after setPrinter error:", closeError);
-        }
-
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while setting the printer: ${error}`);
-        }
+        await closeTemplate();
+        handleVendorError(error, `setPrinter(printerName=${printerName}, fitPage=${fitPage})`);
     }
 };
 
-// Optimized 03/14/25
 export const printerStatus = async (): Promise<PrinterStatus> => {
     try {
         const printer = await Doc.GetPrinter();
@@ -106,7 +93,6 @@ export const printerStatus = async (): Promise<PrinterStatus> => {
     }
 };
 
-// Optimized 03/14/25
 export const closeTemplate = async (): Promise<void> => {
     try {
         const isClosed = await Doc.Close();
@@ -115,15 +101,10 @@ export const closeTemplate = async (): Promise<void> => {
             throw new Error("Failed to close the template file.");
         }
     } catch (error:unknown) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while closing the template. Details: ${String(error)}`);
-        }
+        handleVendorError(error, "closeTemplate()")
     }
 };
 
-// Optimized 03/14/25
 export const startPrint = async (printName: string, bitmask: number): Promise<void> => {
     if (typeof printName !== "string" || printName.trim() === "") {
         throw new TypeError("printName must be a non-empty string.");
@@ -137,32 +118,26 @@ export const startPrint = async (printName: string, bitmask: number): Promise<vo
         const isStarted: boolean = await Doc.StartPrint(printName, bitmask);
 
         if (!isStarted) {
-            try {
-                await closeTemplate();
-            } catch (closeError: unknown) {
-                let closeErrorMessage = "Failed to close the template after a failed print start. ";
-                if (closeError instanceof Error && closeError.message) {
-                    closeErrorMessage += `Close Template Error Details: ${closeError.message}`;
-                } else {
-                    closeErrorMessage += `Close Template Unknown Error Details: ${String(closeError)}`;
-                }
-                throw new Error(`Failed to start the print process. ${closeErrorMessage}`);
-            }
-            throw new Error(`Failed to start the print process with printName: '${printName}' and bitmask: '${bitmask}'.`);
+            throw new Error("Failed to start the print process.");
         }
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unknown error occurred during startPrint. Details: ${String(error)}`);
-        }
+        await closeTemplate();
+        handleVendorError(error, `startPrint(printName=${printName}, bitmask=${bitmask})`);
     }
 };
 
-// Optimized 03/15/25
 export const printOut = async (copies: number): Promise<void> => {
     try {
-        const isPrinted: boolean = await Doc.PrintOut(copies, 0);
+        
+        let parsed = Number(copies); // handles both numbers and numeric strings
+
+        if (!Number.isInteger(parsed) || parsed <= 0) {
+            throw new Error(
+                `Failed to print: invalid "copies" value. Expected a positive integer, but received ${copies} (type: ${typeof copies}).`
+            );
+        }
+
+        const isPrinted: boolean = await Doc.PrintOut(parsed, 0);
 
         if (!isPrinted) {
             throw new Error("Failed to print, please verify the printer name is correct for the template.");
@@ -170,84 +145,52 @@ export const printOut = async (copies: number): Promise<void> => {
 
     } catch (error) {
         await closeTemplate();
-
-        if (error instanceof Error) {
-            throw error; // Re-throw the original error if it's already an Error object.
-        } else {
-            throw new Error(`An unexpected error occurred during printing: ${error}`); // Wrap non-Error objects.
-        }
+        handleVendorError(error, `printOut(copies=${copies})`);
     }
 };
 
-// Optimized 03/15/25
 export const endPrint = async (): Promise<void> => {
     try {
-        const hasEnded: boolean = await Doc.EndPrint();
+        const isEnded: boolean = await Doc.EndPrint();
 
-        if (!hasEnded) {
-            throw new Error("Failed to end print process.");
+        if (!isEnded) {
+            throw new Error("Bpac has failed to end the print process. Attempting to close template.");
         }
 
     } catch (error) {
         await closeTemplate();
-
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while ending the print process: ${error}`);
-        }
+        handleVendorError(error, "endPrint()");
     }
 };
 
-// Optimized 03/15/25
 export const imageData = async (width: number, height: number): Promise<string> => {
     try {
-        let data = await Doc.GetImageData(4, width, height);
+        const data = await Doc.GetImageData(4, width, height);
 
         if (data === null || data === undefined) {
             throw new Error("Doc.GetImageData returned null or undefined.");
         }
 
-        data = data.toString();
-        
-        if (typeof data !== "string") {
-            throw new Error(`Failed to convert Doc.GetImageData result to string. Result type: ${typeof data}`);
-        }
-
-        return data;
-    } catch (error) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while retrieving image data: ${error}`);
-        }
+        return data.toString();
+    } catch (error: unknown) {
+        return handleVendorError(error, `imageData(width=${width}, height=${height})`);
     }
 };
 
-// Optimized 03/15/25
 export const getPrinterName = async (): Promise<string> => {
     try {
         const printerName: string = await Doc.GetPrinterName();
 
-        if (typeof printerName !== "string") {
-            throw new Error(`Unexpected data type returned from Doc.GetPrinterName: ${typeof printerName}`);
-        }
-
-        if (!printerName) {
-            throw new Error("Doc.GetPrinterName returned an empty string.");
+        if (typeof printerName !== "string" || printerName.trim() === "") {
+            throw new Error("Doc.GetPrinterName returned an invalid or empty string.");
         }
 
         return printerName;
-    } catch (error) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while retrieving the printer name: ${error}`);
-        }
+    } catch (error: unknown) {
+        return handleVendorError(error, "getPrinterName()");
     }
 };
 
-// Optimized 03/15/25
 export const getPrinters = async (): Promise<string[]> => {
     try {
         const printerObject = await Doc.GetPrinter();
@@ -259,20 +202,17 @@ export const getPrinters = async (): Promise<string[]> => {
         const printers = await printerObject.GetInstalledPrinters();
 
         if (!Array.isArray(printers)) {
-            throw new Error(`Unexpected data type returned from printerObject.GetInstalledPrinters: ${typeof printers}`);
+            throw new Error(
+                `Unexpected data type returned from printerObject.GetInstalledPrinters: ${typeof printers}`
+            );
         }
 
         return printers;
-    } catch (error) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred while retrieving the list of printers: ${error}`);
-        }
+    } catch (error: unknown) {
+        return handleVendorError(error, "getPrinters()");
     }
 };
 
-// Optimized 03/15/25
 export const exportDocument = async (type: ExportType, filePath: string, dpi: number = 0): Promise<void> => {
     if (typeof filePath !== "string" || filePath.trim() === "") {
         throw new TypeError("filePath must be a non-empty string.");
@@ -289,29 +229,40 @@ export const exportDocument = async (type: ExportType, filePath: string, dpi: nu
             throw new Error(`Failed to export document to '${filePath}'.`);
         }
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            throw error;
-        } else {
-            throw new Error(`An unexpected error occurred during export. Details: ${String(error)}`);
-        }
+        handleVendorError(error, `exportDocument(type=${type}, filePath='${filePath}', dpi=${dpi})`);
     }
 };
 
-// Optimized 03/15/25
-export const populateObjectsInTemplate = async (data: TemplateData): Promise<void> => {
-    for (const key of Object.keys(data)) {
-        const value = data[key];
+export const populateObjectsInTemplate = async (data: TemplateData, ignoreMissingKeys:boolean): Promise<void> => {
+    try {
+        
+        // Guard: ensure data is passed and is a plain object
+        if (Array.isArray(data)) {
+            throw new Error(
+                "Failed to populate template objects: expected a non-null object for \"data\", but received an Array."
+            );
+        }
 
-        try {
+        if (!data || typeof data !== "object") {
+            throw new Error(
+                `Failed to populate template objects: expected a non-null object for "data", but received ${JSON.stringify(data)} (type: ${typeof data}).`
+            );
+        }
+
+        for (const key of Object.keys(data)) {
+            const value = data[key];
             const obj = await Doc.GetObject(key);
-
+    
             if (!obj) {
-                await closeTemplate();
-                throw new Error(`Object "${key}" not found in the template.`);
+                if(ignoreMissingKeys){
+                    continue;
+                } else {
+                    throw new Error(`Template object with key "${key}" could not be found. Check that the template contains this object before populating.`);
+                }
             }
-
+    
             const type: number = await obj.Type;
-
+    
             switch (type) {
             case ObjectTypes.Text:
                 obj.Text = value;
@@ -330,16 +281,22 @@ export const populateObjectsInTemplate = async (data: TemplateData): Promise<voi
                 await obj.SetData(0, value, 0);
                 break;
             default:
-                await closeTemplate();
-                throw new Error(`Unknown object type (${type}) for "${key}".`);
+                throw new Error(`Unrecognized object type (${type}) for template key "${key}".` +
+                " Ensure the template only contains supported types: Text, Image, DateTime, Barcode, or ClipArt.");
             }
-        } catch (error: unknown) {
-            await closeTemplate();
-            if (error instanceof Error) {
-                throw new Error(`Error populating object "${key}": ${error.message}`);
-            } else {
-                throw new Error(`Error populating object "${key}": ${String(error)}`);
-            }
+    
         }
+    } catch (error: unknown) {
+        await closeTemplate();
+        
+        let safeData: string;
+
+        try {
+            safeData = JSON.stringify(data);
+        } catch {
+            safeData = String(data);
+        }
+
+        handleVendorError(error, `populateObjectsInTemplate(data=${safeData})`);
     }
 };
