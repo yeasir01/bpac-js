@@ -233,7 +233,7 @@ export const exportDocument = async (type: ExportType, filePath: string, dpi: nu
     }
 };
 
-export const populateObjectsInTemplate = async (data: TemplateData): Promise<void> => {
+export const populateObjectsInTemplate = async (data: TemplateData, ignoreMissingKeys:boolean): Promise<void> => {
     try {
         
         // Guard: ensure data is passed and is a plain object
@@ -254,7 +254,11 @@ export const populateObjectsInTemplate = async (data: TemplateData): Promise<voi
             const obj = await Doc.GetObject(key);
     
             if (!obj) {
-                throw new Error(`Template object with key "${key}" could not be found. Check that the template contains this object before populating.`);
+                if(ignoreMissingKeys){
+                    continue;
+                } else {
+                    throw new Error(`Template object with key "${key}" could not be found. Check that the template contains this object before populating.`);
+                }
             }
     
             const type: number = await obj.Type;
