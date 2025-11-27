@@ -1,5 +1,0 @@
----
-"bpac-js": major
----
-
-test
