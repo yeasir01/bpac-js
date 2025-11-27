@@ -2,25 +2,30 @@
 
 ## Class 
 
-### `BrotherSdk()`
-The main entry point for interacting with the Brother BPac-JS library.
+### `BrotherSDK()`
+The main entry point for interacting with the library.
+
+### Parameters
+| **Parameter**     | **Type** | **Required** | **Description** |
+|----------------|----------|:--------------:|-----------------|
+| `Config` | BrotherSDKOptions   | ✅           | An object containing configuration settings for the SDK, including the template path, export directory, and optional printer name. |
+
+### Config
+| **Option**     | **Type** | **Required** | **Description** |
+|----------------|----------|:--------------:|-----------------|
+| `templatePath` | string   | ✅           | Full file path to the label template (.lbx) that defines your label design. Supports Windows absolute paths, UNC network paths, Unix/macOS absolute paths, relative paths, or remote URLs. |
+| `exportPath`   | string   | ❌           | Directory path where exported labels will be saved (used with the `export` method). If omitted, labels are not exported to disk unless specified later. |
+| `printer`      | string   | ❌           | Name of the Brother printer to use (e.g., `"Brother QL-820NWB"`). If omitted, the default printer on the template will be used. |
 
 ```javascript
-import BrotherSdk from "bpac-js";
+import BrotherSDK from "bpac-js";
 
-const label = new BrotherSdk({
+const label = new BrotherSDK({
     templatePath: "C:\\Templates\\label-template.lbx",
     exportPath: "C:\\Users\\YourProfile\\Desktop",
     printer: "Brother QL-820NWB"
 });
 ```
-
-### Parameters
-| **Parameter**     | **Type** | **Required** | **Description** |
-|----------------|----------|:--------------:|-----------------|
-| `templatePath` | string   | ✅           | Full file path to the label template (.lbx) that defines your label design. Supports Windows absolute paths, UNC network paths, Unix/macOS absolute paths, relative paths, or remote URLs. |
-| `exportPath`   | string   | ❌           | Directory path where exported labels will be saved (used with the `export` method). If omitted, labels are not exported to disk unless specified later. |
-| `printer`      | string   | ❌           | Name of the Brother printer to use (e.g., `"Brother QL-820NWB"`). If omitted, the default printer on the template will be used. |
 
 | **Path Type**            | **Example**                                      |
 | ------------------------ | ------------------------------------------------ |
@@ -41,10 +46,10 @@ const label = new BrotherSdk({
 Retrieve a list of installed Brother printers available on the system.
 
 ```javascript
-import BrotherSdk from "bpac-js";
+import BrotherSDK from "bpac-js";
 
 const printers = async () => {
-    return await BrotherSdk.getPrinterList();
+    return await BrotherSDK.getPrinterList();
 }
 
 console.log(printers()); //Output: [Brother RJ-4040, Brother QL-820NWB]
@@ -59,7 +64,7 @@ Asynchronously prints one or multiple labels using the specified configurations.
 | Parameter | Type | Required | Description |
 |-----------|------|:--------:|-------------|
 | data | TemplateData \| TemplateData[] | ✅ | Can be a single object or an array of objects. Each object contains key-value pairs where keys correspond to object IDs in your label template and values are the text/content to set. Passing a single object prints one label; an array enables batch printing. |
-| config | PrintConfig | ❌ | Optional object specifying print settings. All options are optional, and defaults are applied if omitted. |
+| options | PrintOptions | ❌ | Object specifying print settings. All options are optional, and defaults are applied if omitted. |
 
 ### Options
 | **Option** | **Type** | **Default** | **Description** |
@@ -82,6 +87,7 @@ Asynchronously prints one or multiple labels using the specified configurations.
 | color | boolean | - |Print in color.|
 | mono | boolean | - |Print in monochrome.|
 | fitPage | boolean | - |Specify whether to adjust the size and position of objects in the template in accordance with layout changes resulting from media changes. If set to true, adjustments will be made; otherwise, if set to false or undefined, no adjustments will be applied.|
+| ignoreMissingKeys | boolean | false |If set to "true", any keys in data that don’t correspond to fields in the template will be ignored without warning.|
 
 > ⚠️ Note: Flags are valid only with models that support the corresponding function. Settings are ignored on models that do not support a given flag.
 
@@ -120,6 +126,7 @@ Asynchronously retrieves and returns **Base64-encoded image data** for a label, 
 |--------|------|:---------:|-------------|
 | height | number | 0 | Vertical size (DPI) of the image. If set to `0`, the height is automatically scaled to maintain the aspect ratio based on the `width`. |
 | width | number | 0 | Horizontal size (DPI) of the image. If set to `0`, the width is automatically scaled to maintain the aspect ratio based on the `height`. |
+| ignoreMissingKeys | boolean | false |If set to "true", any keys in data that don’t correspond to fields in the template will be ignored without warning.|
 
 > 💡 If both width and height are set to 0, the image will be generated at its template's native resolution.
 
@@ -130,4 +137,31 @@ const previewLabel = async () => {
 };
 
 previewLabel();
+```
+
+### `export()`
+Asynchronously populates your label template with the provided data and exports the result to a file. This is useful for generating label files in formats such as LBX, LBL, LBI, BMP, or PAF, without printing.
+
+### Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|:--------:|-------------|
+| data | TemplateData | ✅ | Key–value pairs where each key corresponds to an object ID in the template, and the value is the text or content to apply to that object. |
+| filePathOrFileName | string | ✅ | A file name or absolute file path indicating where the exported file should be saved. If only a file name is provided, the file will be stored in the exportDir configured when initializing the SDK. |
+| options | ExportOptions | ❌ | Optional settings controlling export behavior, such as output resolution and missing-key handling. |
+
+### Options
+| Option | Type | Default | Description |
+|--------|------|:---------:|-------------|
+| resolution | number | 0 | Output resolution (DPI) used for bitmap-based formats (.lbi and .bmp). If set to 0, the printer’s native resolution is used. Examples: Screen: 72–96 DPI, SC-2000: 600 DPI. |
+| ignoreMissingKeys | boolean | false |If set to "true", any keys in data that don’t correspond to fields in the template will be ignored without warning.|
+
+> 💡 The resolution option is only applicable when exporting to `.lbi` or `.bmp`.
+
+```javascript
+const exportLabel = async () => {
+    // Saves to the directory specified in exportDir as "sample.bmp"
+    await label.export({ name: "Bob Brown", id: "A123" }, "sample.bmp", { resolution: 300, ignoreMissingKeys: true });
+};
+
+exportLabel();
 ```

@@ -72,6 +72,13 @@ main {
 	color: #3b3b3b;
 }
 
+.sub-title {
+	text-align: center;
+	font-weight: bold;
+	padding: 0 30px;
+	color: #868686;
+}
+
 .form {
 	padding: 30px;
 }

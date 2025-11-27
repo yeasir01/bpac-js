@@ -80,11 +80,11 @@ If you encounter issues or have suggestions, feel free to contribute to the proj
 
 ```javascript
 // Vanilla JS Script File
-import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
+import BrotherSDK from "https://cdn.jsdelivr.net/npm/bpac-js@latest/dist/index.js";
 
 const printBtn = document.getElementById("print-btn");
 
-const label = new BrotherSdk({
+const label = new BrotherSDK({
     templatePath: "C:\\Templates\\shoe-template.lbx",
     exportPath: "C:\\Users\\YourProfile\\Desktop\\Exported Labels\\",
 });

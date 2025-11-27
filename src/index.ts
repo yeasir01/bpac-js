@@ -1,6 +1,6 @@
-import BrotherSdk from "./BrotherSdk.ts";
-import { PrinterStatus, PrintConfig, TemplateData, ImageOptions } from "./types.ts";
+import BrotherSDK from "./BrotherSdk.ts";
+import { PrinterStatus, PrintOptions, TemplateData, ImageOptions, ExportOptions, BrotherSDKOptions } from "./types.ts";
 
-export { BrotherSdk };
-export default BrotherSdk;
-export type { PrinterStatus, PrintConfig, TemplateData, ImageOptions };
+export { BrotherSDK };
+export default BrotherSDK;
+export type { PrinterStatus, PrintOptions, TemplateData, ImageOptions, ExportOptions, BrotherSDKOptions };

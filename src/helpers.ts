@@ -46,7 +46,7 @@ export const getAbsolutePath = (
 };
 
 // Optimized 03/15/25
-export const getExportType = (fileExt:string):ExportType => {
+export const getExportType = (fileExt: string): ExportType => {
     switch (fileExt) {
     case ".lbx":
         return 0x1;
@@ -104,7 +104,7 @@ export class BpacError extends Error {
     }
 }
 
-export const handleVendorError = (error:unknown, context:string): never => {
+export const handleVendorError = (error: unknown, context: string): never => {
     let message = `An unexpected error occurred in ${context}.`;
 
     if (typeof error === "string") {
@@ -122,4 +122,21 @@ export const handleVendorError = (error:unknown, context:string): never => {
     }
 
     throw new BpacError(message, context);
+}
+
+export const assertSameOrigin = (templatePath: string): void => {
+    try {
+        const url = new URL(templatePath);
+
+        const sameOrigin =
+            url.protocol === window.location.protocol &&
+            url.hostname === window.location.hostname &&
+            (url.port || "") === (window.location.port || "");
+
+        if (!sameOrigin) {
+            console.warn(`Cross-origin templatePath blocked: "${templatePath}". Remote template URLs must be hosted on the same origin to avoid CORS issues.`)
+        }
+    } catch {
+        return;
+    }
 }

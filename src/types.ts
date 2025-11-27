@@ -1,14 +1,18 @@
+export type IgnoreMissingKeys = {
+    ignoreMissingKeys: boolean;
+}
+
 export type TemplateData = {
     [key:string] : string | Date
 };
 
-export type Constructor = {
+export type BrotherSDKOptions = {
     templatePath: string;
     exportDir?: string;
     printer?: string;
 };
 
-export type PrintOptions = {
+export type PrintConfig = {
     copies?: number;
     printName?: string;
 };
@@ -39,11 +43,15 @@ export type FitPage = {
     fitPage?: boolean;
 };
 
-export type PrintConfig = PrintOptions & StartPrintOptions & FitPage;
+export type PrintOptions = IgnoreMissingKeys & PrintConfig & StartPrintOptions & FitPage;
 
-export type ImageOptions = {
+export type ImageOptions = IgnoreMissingKeys & {
     width?: number;
     height?:number;
+};
+
+export type ExportOptions = IgnoreMissingKeys & {
+    resolution?: number;
 };
 
 export enum ObjectTypes {

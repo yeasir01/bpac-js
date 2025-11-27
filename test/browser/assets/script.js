@@ -1,13 +1,12 @@
 /**
  * DEMO ONLY: Example usage of bpac-js.
- * Configured for VS Code live-server just tap the live server icon to view on your browser.
+ * Designed for quick testing with VS Code Live Server—click the Live Server icon to open in your browser.
  * This code is not production-ready. 
  * No advanced error handling, or best practices are applied.
 */
 
-import { BrotherSdk } from "../index.js";
-// import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.1.0/dist/index.js";
-// import BrotherSdk from "https://cdn.jsdelivr.net/npm/bpac-js@2.2.0/dist/index.js";
+// import BrotherSDK from "https://cdn.jsdelivr.net/npm/bpac-js@2.2.0/dist/index.js";
+import { BrotherSDK } from "../index.js";
 
 window.addEventListener("DOMContentLoaded", () => {
     const printBtn = document.getElementById("print-btn");
@@ -24,13 +23,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const origin = window.location.origin;
 
-    const label = new BrotherSdk({
-        templatePath: origin + "/assets/template.lbx",
+    const label = new BrotherSDK({
+        templatePath: origin + "/assets/template.lbx"
     });
 
     const populatePrinterSelect = async () => {
         try {
-            const printers = await BrotherSdk.getPrinterList();
+            const printers = await BrotherSDK.getPrinterList();
             const fragment = document.createDocumentFragment();
 
             printers.forEach((printerName) => {
@@ -68,7 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const preview = async (data) => {
         try {
             imagePreview.src = "https://placehold.co/300x300/eeeeee/555555?text=Loding...";
-            const base64String = await label.getImageData(data, { width: 300 });
+            const base64String = await label.getImageData(data, { width: 300, ignoreMissingKeys: true });
             imagePreview.src = base64String;
         } catch (error) {
             console.error(error);
