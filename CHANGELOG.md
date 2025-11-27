@@ -1,5 +1,11 @@
 # bpac-js
 
+## 3.0.1
+
+### Patch Changes
+
+- dd92c44: Fixed issue preventing 3.0.0 update from being published to npm; restored correct versioning and changelog.
+
 ## 3.0.0
 
 ### Major Changes
