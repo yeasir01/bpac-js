@@ -12,3 +12,4 @@
   - Update all imports from `BrotherSdk` → `BrotherSDK`
   - Check your TypeScript types, some names have changed
   - If you rely on strict template key validation, `ignoreMissingKeys` may change this behavior
+
