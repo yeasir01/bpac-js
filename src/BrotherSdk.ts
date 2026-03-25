@@ -83,6 +83,7 @@ export default class BrotherSDK {
     async getPrinterStatus(): Promise<PrinterStatus> {
         await BrotherSDK.printerIsReady();
         await openTemplate(this.templatePath);
+        if (this.printer) await setPrinter(this.printer, false);
         const statusObject = await printerStatus();
         await closeTemplate();
         return statusObject;
