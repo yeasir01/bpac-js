@@ -372,6 +372,7 @@ export default class BrotherSDK {
      *
      */
     static async getPrinterList(): Promise<string[]> {
+        BrotherSDK.#initialize();
         await BrotherSDK.printerIsReady();
         const printers = await getPrinters();
         return printers;
