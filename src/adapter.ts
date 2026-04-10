@@ -274,8 +274,7 @@ export const populateObjectsInTemplate = async (data: TemplateData, ignoreMissin
                 await obj.SetData(0, value, null);
                 break;
             case ObjectTypes.Barcode:
-                const barcodeIndex = await Doc.GetBarcodeIndex(key);
-                await Doc.SetBarcodeData(barcodeIndex, value);
+                obj.Text = value;
                 break;
             case ObjectTypes.ClipArt:
                 await obj.SetData(0, value, 0);
